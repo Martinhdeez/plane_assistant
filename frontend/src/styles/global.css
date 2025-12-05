@@ -1,0 +1,176 @@
+:root {
+  /* DIHGIGAL Inspired Palette - Professional & High Contrast */
+  /* Primary Colors */
+  --primary-blue: #0277bd;     /* Vivid corporate blue */
+  --primary-dark: #001e3c;     /* Very dark blue for text/headings */
+  --primary-light: #e1f5fe;    /* Very light blue for backgrounds */
+  
+  /* Accent Colors */
+  --accent-cyan: #00bcd4;      /* Bright Cyan */
+  --accent-highlight: #4dd0e1; /* Lighter Cyan for hover */
+  
+  /* Neutral Colors (High Contrast) */
+  --bg-body: #ffffff;          /* Pure white background */
+  --bg-surface: #f5f7fa;       /* Light gray surface */
+  --bg-card: #ffffff;          /* Card background */
+  
+  --text-primary: #1a1a1a;     /* Almost black for primary text */
+  --text-secondary: #4a4a4a;   /* Dark gray for secondary text */
+  --text-light: #ffffff;       /* White text for dark backgrounds */
+  
+  --border-color: #e0e0e0;     /* Subtle border */
+  --border-focus: #0056b3;     /* Focus border */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #0056b3 0%, #003366 100%);
+  --gradient-surface: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+  
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  --spacing-2xl: 5rem;
+  
+  /* Border radius - More rounded */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  
+  /* Shadows */
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the main app content */
+}
+
+code {
+  font-family: 'Fira Code', 'Courier New', monospace;
+}
+
+/* Utility classes */
+.container {
+  width: 100%;
+  max-width: 1280px; /* Standard max-width for large screens */
+  margin: 0 auto;    /* Center horizontally */
+  padding: 0 var(--spacing-md);
+  position: relative;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.01em;
+}
+
+.btn-primary {
+  background: var(--primary-blue);
+  color: var(--text-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--primary-blue);
+  border: 2px solid var(--primary-blue);
+}
+
+.btn-secondary:hover {
+  background: var(--primary-blue);
+  color: var(--text-light);
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
