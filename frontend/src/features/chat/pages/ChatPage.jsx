@@ -16,9 +16,13 @@ function ChatPage() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState('');
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [modalImage, setModalImage] = useState(null);
   const messagesEndRef = useRef(null);
   const titleInputRef = useRef(null);
   const settingsMenuRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -59,6 +63,68 @@ function ChatPage() {
     scrollToBottom();
   }, [messages]);
 
+  // Load authenticated images
+  useEffect(() => {
+    const loadImages = async () => {
+      const token = localStorage.getItem('access_token');
+      if (!token || messages.length === 0) return;
+
+      // Find messages that need image loading
+      const messagesToUpdate = [];
+      
+      for (let i = 0; i < messages.length; i++) {
+        const message = messages[i];
+        // Only load if has image, has URL path, and not already a blob URL
+        if (message.has_image && message.image_url && !message.image_url.startsWith('blob:')) {
+          console.log('Need to load image for message:', i, message.image_url);
+          messagesToUpdate.push({ index: i, message });
+        }
+      }
+
+      if (messagesToUpdate.length === 0) {
+        console.log('No images to load');
+        return;
+      }
+
+      console.log(`Loading ${messagesToUpdate.length} images...`);
+
+      // Load all images
+      const updatedMessages = [...messages];
+      
+      for (const { index, message } of messagesToUpdate) {
+        try {
+          // Build full URL - image_url already includes /api/images/
+          const imageUrl = message.image_url.startsWith('http') 
+            ? message.image_url
+            : `http://localhost:8000${message.image_url}`;
+          
+          console.log('Fetching image from:', imageUrl);
+          
+          const response = await fetch(imageUrl, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          
+          if (response.ok) {
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            updatedMessages[index] = { ...message, image_url: blobUrl };
+            console.log('Image loaded successfully:', blobUrl);
+          } else {
+            console.error('Failed to load image:', response.status, response.statusText, imageUrl);
+          }
+        } catch (error) {
+          console.error('Error loading image:', error);
+        }
+      }
+
+      // Update all messages at once
+      setMessages(updatedMessages);
+      console.log('All images loaded, messages updated');
+    };
+
+    loadImages();
+  }, [messages.length]); // Run when messages array length changes
+
   const fetchChat = async () => {
     try {
       setLoading(true);
@@ -78,29 +144,80 @@ function ChatPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setError('Por favor selecciona un archivo de imagen válido');
+        return;
+      }
+      
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        setError('La imagen es demasiado grande (máximo 10MB)');
+        return;
+      }
+      
+      setSelectedImage(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => setImagePreview(e.target.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     
-    if (!inputMessage.trim() || sending) {
+    if ((!inputMessage.trim() && !selectedImage) || sending) {
       return;
     }
 
-    const userMessageContent = inputMessage.trim();
+    const userMessageContent = inputMessage.trim() || '(Imagen adjunta)';
+    const imageToSend = selectedImage;
+    
     setInputMessage('');
+    setSelectedImage(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     setSending(true);
 
     // Add user message to UI immediately
     const userMessage = {
       role: 'user',
       content: userMessageContent,
+      has_image: !!imageToSend,
+      image_url: imageToSend ? URL.createObjectURL(imageToSend) : null,
       created_at: new Date().toISOString()
     };
     setMessages(prev => [...prev, userMessage]);
 
     try {
       // Send message and get AI response
-      const aiMessage = await sendMessage(chatId, userMessageContent);
-      setMessages(prev => [...prev, aiMessage]);
+      const response = await sendMessage(chatId, userMessageContent, imageToSend);
+      
+      // Remove temporary preview URL
+      if (userMessage.image_url && userMessage.image_url.startsWith('blob:')) {
+        URL.revokeObjectURL(userMessage.image_url);
+      }
+      
+      // Update messages with actual data from server
+      setMessages(prev => {
+        const withoutTemp = prev.slice(0, -1); // Remove temporary user message
+        return [...withoutTemp, response.user_message, response.ai_message];
+      });
     } catch (err) {
       setError('Error al enviar el mensaje');
       console.error('Error sending message:', err);
@@ -253,6 +370,17 @@ function ChatPage() {
               </div>
               <div className="message-content">
                 <p>{message.content}</p>
+                {message.has_image && message.image_url && (
+                  <div className="message-image-container">
+                    <img 
+                      src={message.image_url} 
+                      alt="Imagen adjunta" 
+                      className="message-image"
+                      onClick={() => setModalImage(message.image_url)}
+                      title="Click para ampliar"
+                    />
+                  </div>
+                )}
                 <div className="message-time">
                   {formatTime(message.created_at)}
                 </div>
@@ -283,7 +411,43 @@ function ChatPage() {
             {error}
           </div>
         )}
+        
+        {/* Image preview */}
+        {imagePreview && (
+          <div className="image-preview-container">
+            <img src={imagePreview} alt="Preview" className="image-preview" />
+            <button 
+              type="button"
+              className="remove-image-button"
+              onClick={handleRemoveImage}
+              aria-label="Eliminar imagen"
+            >
+              ❌
+            </button>
+          </div>
+        )}
+        
         <form className="input-form" onSubmit={handleSendMessage}>
+          {/* Hidden file input */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageSelect}
+            accept="image/*"
+            style={{ display: 'none' }}
+          />
+          
+          {/* Image upload button */}
+          <button
+            type="button"
+            className="attach-button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={sending}
+            aria-label="Adjuntar imagen"
+          >
+            📎
+          </button>
+          
           <textarea
             className="message-input"
             placeholder="Escribe tu consulta sobre mantenimiento aeronáutico..."
@@ -300,12 +464,28 @@ function ChatPage() {
           <button 
             type="submit" 
             className="send-button"
-            disabled={sending || !inputMessage.trim()}
+            disabled={sending || (!inputMessage.trim() && !selectedImage)}
           >
             {sending ? 'Enviando...' : 'Enviar'}
           </button>
         </form>
       </div>
+
+      {/* Image Modal */}
+      {modalImage && (
+        <div className="image-modal" onClick={() => setModalImage(null)}>
+          <div className="image-modal-content">
+            <button 
+              className="image-modal-close"
+              onClick={() => setModalImage(null)}
+              aria-label="Cerrar"
+            >
+              ✕
+            </button>
+            <img src={modalImage} alt="Imagen ampliada" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

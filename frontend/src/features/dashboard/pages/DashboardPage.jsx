@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { logout, isAuthenticated } from '../../auth/services/authService';
 import { getChats, createChat } from '../../chat/services/chatService';
+import { getCurrentUser } from '../../profile/services/userService';
 import './DashboardPage.css';
 
 function DashboardPage() {
   const navigate = useNavigate();
   const [chats, setChats] = useState([]);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -17,19 +19,23 @@ function DashboardPage() {
       return;
     }
 
-    // Fetch chats from API
-    fetchChats();
+    // Fetch user and chats
+    fetchUserAndChats();
   }, [navigate]);
 
-  const fetchChats = async () => {
+  const fetchUserAndChats = async () => {
     try {
       setLoading(true);
       setError('');
-      const fetchedChats = await getChats();
-      setChats(fetchedChats);
+      const [userData, chatsData] = await Promise.all([
+        getCurrentUser(),
+        getChats()
+      ]);
+      setUser(userData);
+      setChats(chatsData);
     } catch (err) {
-      setError('Error al cargar las conversaciones');
-      console.error('Error fetching chats:', err);
+      setError('Error al cargar los datos');
+      console.error('Error fetching data:', err);
     } finally {
       setLoading(false);
     }
@@ -72,6 +78,20 @@ function DashboardPage() {
 
   return (
     <div className="dashboard-page">
+      <div className="clouds-background">
+        <div className="cloud cloud-1">☁️</div>
+        <div className="cloud cloud-2">☁️</div>
+        <div className="cloud cloud-3">☁️</div>
+        <div className="cloud cloud-4">☁️</div>
+        <div className="cloud cloud-5">☁️</div>
+        <div className="cloud cloud-6">☁️</div>
+        <div className="cloud cloud-7">☁️</div>
+        <div className="cloud cloud-8">☁️</div>
+        <div className="cloud cloud-9">☁️</div>
+        <div className="cloud cloud-10">☁️</div>
+        <div className="cloud cloud-11">☁️</div>
+        <div className="cloud cloud-12">☁️</div>
+      </div>
       <header className="dashboard-header">
         <div className="container">
           <div className="dashboard-logo">
@@ -80,10 +100,12 @@ function DashboardPage() {
             </Link>
           </div>
           <div className="dashboard-user">
-            <div className="user-info">
-              <div className="user-name">Usuario</div>
-              <div className="user-email">usuario@email.com</div>
-            </div>
+            <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div className="user-info">
+                <div className="user-name">Hola {user?.username || 'Usuario'}</div>
+                <div className="user-email">{user?.email || 'cargando...'}</div>
+              </div>
+            </Link>
             <button className="btn-logout" onClick={handleLogout}>
               Cerrar Sesión
             </button>
@@ -124,7 +146,7 @@ function DashboardPage() {
                     className="chat-card"
                     onClick={() => handleChatClick(chat.id)}
                   >
-                    <div className="chat-header">
+                    <div className="chat-card-header">
                       <h3 className="chat-title">{chat.title}</h3>
                       <span className="chat-date">{formatDate(chat.created_at)}</span>
                     </div>

@@ -6,11 +6,6 @@ function LandingPage() {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-background">
-          <div className="cloud cloud-1"></div>
-          <div className="cloud cloud-2"></div>
-          <div className="cloud cloud-3"></div>
-          <div className="cloud cloud-4"></div>
-          <div className="cloud cloud-5"></div>
           <svg
             className="flight-bg"
             viewBox="0 0 2000 600"
@@ -61,6 +56,18 @@ function LandingPage() {
               </animateMotion>
             </image>
           </svg>
+          <div className="cloud cloud-1">☁️</div>
+          <div className="cloud cloud-2">☁️</div>
+          <div className="cloud cloud-3">☁️</div>
+          <div className="cloud cloud-4">☁️</div>
+          <div className="cloud cloud-5">☁️</div>
+          <div className="cloud cloud-6">☁️</div>
+          <div className="cloud cloud-7">☁️</div>
+          <div className="cloud cloud-8">☁️</div>
+          <div className="cloud cloud-9">☁️</div>
+          <div className="cloud cloud-10">☁️</div>
+          <div className="cloud cloud-11">☁️</div>
+          <div className="cloud cloud-12">☁️</div>
         </div>
         <div className="container hero-content">
           <h1 className="hero-title fade-in-up">

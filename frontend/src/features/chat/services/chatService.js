@@ -108,21 +108,45 @@ export async function updateChatTitle(chatId, title) {
 }
 
 /**
- * Send a message in a chat and get AI response
+ * Send a message in a chat (with optional image) and get AI response
  * @param {number} chatId
  * @param {string} content - Message content
- * @returns {Promise<Object>} AI response message
+ * @param {File|null} image - Optional image file
+ * @returns {Promise<Object>} Response with user_message and ai_message
  */
-export async function sendMessage(chatId, content) {
+export async function sendMessage(chatId, content, image = null) {
+    const token = localStorage.getItem('access_token');
+
+    // Use FormData to support file uploads
+    const formData = new FormData();
+    formData.append('content', content);
+    if (image) {
+        formData.append('image', image);
+    }
+
     const response = await fetch(`${API_BASE_URL}/chats/${chatId}/messages`, {
         method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ content }),
+        headers: {
+            'Authorization': `Bearer ${token}`
+            // Don't set Content-Type - browser will set it with boundary for FormData
+        },
+        body: formData,
     });
 
     if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.detail || 'Failed to send message');
+        // Get response text first
+        const responseText = await response.text();
+
+        // Try to parse as JSON
+        let errorMessage = 'Failed to send message';
+        try {
+            const error = JSON.parse(responseText);
+            errorMessage = error.detail || errorMessage;
+        } catch (e) {
+            // If not JSON, use the text directly
+            errorMessage = responseText || `HTTP ${response.status}: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
     }
 
     return await response.json();

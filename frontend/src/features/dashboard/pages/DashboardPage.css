@@ -3,7 +3,40 @@
   width: 100%;
   background: linear-gradient(180deg, #039be5 0%, #4fc3f7 40%, #b3e5fc 100%);
   background-attachment: fixed;
+  position: relative;
+  overflow-x: hidden;
 }
+
+/* Clouds Background */
+.clouds-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.cloud {
+  position: absolute;
+  font-size: 80px;
+  opacity: 0.8;
+}
+
+.cloud-1 { top: 10%; left: 10%; }
+.cloud-2 { top: 15%; left: 30%; }
+.cloud-3 { top: 20%; left: 60%; font-size: 100px; }
+.cloud-4 { top: 35%; left: 15%; }
+.cloud-5 { top: 40%; left: 75%; font-size: 90px; }
+.cloud-6 { top: 55%; left: 25%; }
+.cloud-7 { top: 60%; left: 50%; font-size: 95px; }
+.cloud-8 { top: 70%; left: 70%; }
+.cloud-9 { top: 75%; left: 5%; font-size: 85px; }
+.cloud-10 { top: 80%; left: 40%; }
+.cloud-11 { top: 85%; left: 80%; font-size: 90px; }
+.cloud-12 { top: 5%; left: 85%; }
 
 .dashboard-header {
   background: rgba(255, 255, 255, 0.95);
@@ -42,6 +75,14 @@
 
 .user-info {
   text-align: right;
+  cursor: pointer;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.user-info:hover {
+  background: rgba(2, 119, 189, 0.1);
 }
 
 .user-name {
@@ -73,6 +114,8 @@
 
 .dashboard-content {
   padding: var(--spacing-2xl) 0;
+  position: relative;
+  z-index: 1;
 }
 
 .dashboard-title {
@@ -165,7 +208,7 @@
   border-color: var(--primary-blue);
 }
 
-.chat-header {
+.chat-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -196,6 +239,7 @@
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   margin-bottom: var(--spacing-sm);

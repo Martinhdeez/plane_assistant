@@ -4,6 +4,7 @@ import LoginPage from './features/auth/pages/LoginPage';
 import RegisterPage from './features/auth/pages/RegisterPage';
 import DashboardPage from './features/dashboard/pages/DashboardPage';
 import ChatPage from './features/chat/pages/ChatPage';
+import ProfilePage from './features/profile/pages/ProfilePage';
 import './App.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/chat/:chatId" element={<ChatPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </Router>
   );

@@ -80,8 +80,11 @@ function AuthForm({
     
     try {
       await onSubmit(formData);
-    } catch (error) {
-      setFormError(error.message || 'Ocurrió un error. Por favor intenta de nuevo.');
+    } catch (err) {
+      // Extract error message properly
+      const errorMessage = err.message || err.toString() || 'Ocurrió un error. Por favor intenta de nuevo.';
+      setFormError(errorMessage);
+      console.error('Form submission error:', err);
     } finally {
       setIsLoading(false);
     }

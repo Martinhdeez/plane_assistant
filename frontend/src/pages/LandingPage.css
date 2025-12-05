@@ -28,7 +28,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 0;
+  z-index: 1;
   overflow: hidden;
   /* Ensure background stays behind content */
   pointer-events: none;
@@ -37,65 +37,22 @@
 /* Clouds - Optimized */
 .cloud {
   position: absolute;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M18.5 12c.83 0 1.5.67 1.5 1.5S19.33 15 18.5 15H6.5C5.12 15 4 13.88 4 12.5S5.12 10 6.5 10c.09 0 .17.01.25.02C7.3 8.2 8.86 7 10.75 7c1.67 0 3.07.92 3.8 2.27C14.96 9.11 15.46 9 16 9c1.38 0 2.5 1.12 2.5 2.5z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.9;
-  /* Removed drop-shadow for performance */
-  will-change: transform; /* Hint for browser optimization */
-}
-
-.cloud-1 {
-  width: 250px;
-  height: 120px;
-  top: 10%;
-  left: -250px;
-  animation: floatCloud 35s linear infinite;
-}
-
-.cloud-2 {
-  width: 350px;
-  height: 180px;
-  top: 35%;
-  left: -350px;
-  animation: floatCloud 50s linear infinite;
-  animation-delay: -15s;
-  opacity: 0.7;
-}
-
-.cloud-3 {
-  width: 180px;
-  height: 90px;
-  top: 75%;
-  left: -180px;
-  animation: floatCloud 30s linear infinite;
-  animation-delay: -5s;
-}
-
-.cloud-4 {
-  width: 220px;
-  height: 110px;
-  top: 20%;
-  left: -220px;
-  animation: floatCloud 40s linear infinite;
-  animation-delay: -25s;
+  font-size: 80px;
   opacity: 0.8;
 }
 
-.cloud-5 {
-  width: 300px;
-  height: 140px;
-  top: 60%;
-  left: -300px;
-  animation: floatCloud 55s linear infinite;
-  animation-delay: -10s;
-  opacity: 0.6;
-}
-
-@keyframes floatCloud {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(120vw); }
-}
+.cloud-1 { top: 10%; left: 10%; }
+.cloud-2 { top: 15%; left: 30%; }
+.cloud-3 { top: 20%; left: 60%; font-size: 100px; }
+.cloud-4 { top: 35%; left: 15%; }
+.cloud-5 { top: 40%; left: 75%; font-size: 90px; }
+.cloud-6 { top: 55%; left: 25%; }
+.cloud-7 { top: 60%; left: 50%; font-size: 95px; }
+.cloud-8 { top: 70%; left: 70%; }
+.cloud-9 { top: 75%; left: 5%; font-size: 85px; }
+.cloud-10 { top: 80%; left: 40%; }
+.cloud-11 { top: 85%; left: 80%; font-size: 90px; }
+.cloud-12 { top: 5%; left: 85%; }
 
 /* Hero Content Layout */
 .hero-content {
