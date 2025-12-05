@@ -11,6 +11,8 @@ import os
 from dotenv import load_dotenv
 from app.core.database import Base
 from app.user.user import User  # Import models to register them
+from app.assistant.chat.chat import Chat
+from app.assistant.message.message import Message
 
 load_dotenv()
 

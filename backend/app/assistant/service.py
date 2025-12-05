@@ -1,5 +1,5 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from app.core.config import settings
 
 # System prompt especializado en mantenimiento de aviones
@@ -32,20 +32,30 @@ class GeminiService:
             max_output_tokens=2048,
         )
     
-    async def chat(self, user_message: str) -> str:
+    async def chat(self, user_message: str, message_history: list[dict] = None) -> str:
         """
         Send a message to Gemini and get a response.
         
         Args:
             user_message: The user's question or message
+            message_history: Optional list of previous messages for context
+                            Format: [{"role": "user"|"assistant", "content": "..."}]
             
         Returns:
             The AI assistant's response
         """
-        messages = [
-            SystemMessage(content=SYSTEM_PROMPT),
-            HumanMessage(content=user_message)
-        ]
+        messages = [SystemMessage(content=SYSTEM_PROMPT)]
+        
+        # Add message history if provided
+        if message_history:
+            for msg in message_history:
+                if msg["role"] == "user":
+                    messages.append(HumanMessage(content=msg["content"]))
+                elif msg["role"] == "assistant":
+                    messages.append(AIMessage(content=msg["content"]))
+        
+        # Add current user message
+        messages.append(HumanMessage(content=user_message))
         
         response = await self.model.ainvoke(messages)
         return response.content
