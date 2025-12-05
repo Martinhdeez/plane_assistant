@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { logout, isAuthenticated } from '../../auth/services/authService';
 import { getChats, createChat } from '../../chat/services/chatService';
 import './DashboardPage.css';
@@ -75,7 +75,9 @@ function DashboardPage() {
       <header className="dashboard-header">
         <div className="container">
           <div className="dashboard-logo">
-            <h1>✈️ Plane Assistant</h1>
+            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <h1>✈️ Plane Assistant</h1>
+            </Link>
           </div>
           <div className="dashboard-user">
             <div className="user-info">

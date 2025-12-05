@@ -1,10 +1,18 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import AuthForm from '../components/AuthForm';
-import { register, login } from '../services/authService';
+import { register, isAuthenticated } from '../services/authService';
 import './RegisterPage.css';
 
 function RegisterPage() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect to dashboard if already authenticated
+    if (isAuthenticated()) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
 
   const fields = [
     {

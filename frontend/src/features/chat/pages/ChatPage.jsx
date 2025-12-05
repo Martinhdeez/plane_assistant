@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getChat, sendMessage, updateChatTitle } from '../services/chatService';
+import { getChat, sendMessage, updateChatTitle, deleteChat } from '../services/chatService';
 import { isAuthenticated } from '../../auth/services/authService';
 import './ChatPage.css';
 
@@ -15,8 +15,10 @@ function ChatPage() {
   const [error, setError] = useState('');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState('');
+  const [showSettingsMenu, setShowSettingsMenu] = useState(false);
   const messagesEndRef = useRef(null);
   const titleInputRef = useRef(null);
+  const settingsMenuRef = useRef(null);
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -38,6 +40,20 @@ function ChatPage() {
       titleInputRef.current.select();
     }
   }, [isEditingTitle]);
+
+  useEffect(() => {
+    // Close settings menu when clicking outside
+    function handleClickOutside(event) {
+      if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target)) {
+        setShowSettingsMenu(false);
+      }
+    }
+
+    if (showSettingsMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showSettingsMenu]);
 
   useEffect(() => {
     scrollToBottom();
@@ -136,6 +152,22 @@ function ChatPage() {
     }
   };
 
+  const handleDeleteChat = async () => {
+    if (!window.confirm('¿Estás seguro de que quieres eliminar esta conversación? Esta acción no se puede deshacer.')) {
+      return;
+    }
+
+    try {
+      await deleteChat(chatId);
+      // Redirect to dashboard after successful deletion
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Error al eliminar la conversación');
+      console.error('Error deleting chat:', err);
+      setShowSettingsMenu(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="chat-page">
@@ -185,9 +217,30 @@ function ChatPage() {
               </h1>
             )}
           </div>
-          <Link to="/dashboard" className="back-button">
-            ← Volver
-          </Link>
+          <div className="chat-header-actions">
+            <div className="settings-menu-container" ref={settingsMenuRef}>
+              <button 
+                className="settings-button"
+                onClick={() => setShowSettingsMenu(!showSettingsMenu)}
+                aria-label="Configuración"
+              >
+                ⚙️
+              </button>
+              {showSettingsMenu && (
+                <div className="settings-dropdown">
+                  <button 
+                    className="settings-option delete-option"
+                    onClick={handleDeleteChat}
+                  >
+                    🗑️ Eliminar conversación
+                  </button>
+                </div>
+              )}
+            </div>
+            <Link to="/dashboard" className="back-button">
+              ← Volver
+            </Link>
+          </div>
         </div>
       </header>
 

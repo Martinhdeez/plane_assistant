@@ -26,6 +26,12 @@
   font-weight: 800;
   color: var(--primary-dark);
   margin: 0;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.dashboard-logo h1:hover {
+  color: var(--primary-blue);
 }
 
 .dashboard-user {

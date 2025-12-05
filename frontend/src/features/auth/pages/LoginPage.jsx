@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import AuthForm from '../components/AuthForm';
-import { login } from '../services/authService';
+import { login, isAuthenticated } from '../services/authService';
 import './LoginPage.css';
 
 function LoginPage() {
@@ -10,13 +10,19 @@ function LoginPage() {
   const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
+    // Redirect to dashboard if already authenticated
+    if (isAuthenticated()) {
+      navigate('/dashboard');
+      return;
+    }
+
     // Check if there's a success message from registration
     if (location.state?.message) {
       setSuccessMessage(location.state.message);
       // Clear the message from location state
       window.history.replaceState({}, document.title);
     }
-  }, [location]);
+  }, [location, navigate]);
 
   const fields = [
     {
