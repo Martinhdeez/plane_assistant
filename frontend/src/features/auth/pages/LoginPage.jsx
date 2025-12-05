@@ -1,10 +1,22 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import AuthForm from '../components/AuthForm';
 import { login } from '../services/authService';
 import './LoginPage.css';
 
 function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [successMessage, setSuccessMessage] = useState('');
+
+  useEffect(() => {
+    // Check if there's a success message from registration
+    if (location.state?.message) {
+      setSuccessMessage(location.state.message);
+      // Clear the message from location state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   const fields = [
     {
@@ -25,8 +37,8 @@ function LoginPage() {
 
   const handleLogin = async (formData) => {
     await login(formData.email, formData.password);
-    // Redirect to dashboard or home after successful login
-    navigate('/');
+    // Redirect to dashboard after successful login
+    navigate('/dashboard');
   };
 
   return (
@@ -35,6 +47,12 @@ function LoginPage() {
         <a href="/" className="back-to-home">
           ← Volver al inicio
         </a>
+        
+        {successMessage && (
+          <div className="success-message">
+            {successMessage}
+          </div>
+        )}
         
         <div className="auth-logo">
           <h1>Plane Assistant</h1>

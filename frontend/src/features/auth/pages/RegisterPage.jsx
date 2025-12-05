@@ -47,11 +47,13 @@ function RegisterPage() {
     // Register the user
     await register(formData.username, formData.email, formData.password);
     
-    // Auto-login after successful registration
-    await login(formData.email, formData.password);
-    
-    // Redirect to home
-    navigate('/');
+    // Redirect to login with success message
+    navigate('/login', { 
+      state: { 
+        message: '¡Cuenta creada exitosamente! Por favor inicia sesión.',
+        type: 'success'
+      } 
+    });
   };
 
   return (

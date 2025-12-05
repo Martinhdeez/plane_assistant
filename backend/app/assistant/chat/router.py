@@ -6,7 +6,7 @@ from app.core.database import get_db
 from app.auth.dependencies import get_current_user
 from app.user.user import User
 from app.assistant.chat.chat import Chat
-from app.assistant.chat.schemas import ChatCreate, ChatResponse, ChatListResponse, ChatWithMessages
+from app.assistant.chat.schemas import ChatCreate, ChatUpdate, ChatResponse, ChatListResponse, ChatWithMessages
 from app.assistant.message.message import Message, MessageRole
 from app.assistant.message.schemas import MessageCreate, MessageResponse
 from app.assistant.service import gemini_service
@@ -98,6 +98,44 @@ async def get_chat(
         title=chat.title,
         created_at=chat.created_at,
         messages=[MessageResponse.model_validate(msg) for msg in messages]
+    )
+
+@router.patch("/{chat_id}", response_model=ChatResponse)
+async def update_chat(
+    chat_id: int,
+    chat_update: ChatUpdate,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)]
+):
+    """Update chat title."""
+    result = await db.execute(
+        select(Chat).where(Chat.id == chat_id, Chat.user_id == current_user.id)
+    )
+    chat = result.scalars().first()
+    
+    if not chat:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Chat not found"
+        )
+    
+    # Update title
+    chat.title = chat_update.title
+    await db.commit()
+    await db.refresh(chat)
+    
+    # Get message count
+    count_result = await db.execute(
+        select(func.count(Message.id)).where(Message.chat_id == chat_id)
+    )
+    message_count = count_result.scalar()
+    
+    return ChatResponse(
+        id=chat.id,
+        user_id=chat.user_id,
+        title=chat.title,
+        created_at=chat.created_at,
+        message_count=message_count
     )
 
 @router.delete("/{chat_id}", status_code=status.HTTP_204_NO_CONTENT)

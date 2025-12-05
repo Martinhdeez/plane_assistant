@@ -4,6 +4,9 @@ from datetime import datetime
 class ChatCreate(BaseModel):
     title: str = Field(..., min_length=1, max_length=200)
 
+class ChatUpdate(BaseModel):
+    title: str = Field(..., min_length=1, max_length=200)
+
 class ChatResponse(BaseModel):
     id: int
     user_id: int

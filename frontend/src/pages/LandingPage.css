@@ -213,9 +213,9 @@
   top: 6px;
   left: 50%;
   transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  background: var(--primary-dark); /* Changed to dark blue/black */
+  width: 8px;  /* Increased from 4px */
+  height: 8px; /* Increased from 4px */
+  background: var(--primary-dark);
   border-radius: 50%;
   animation: scrollDot 2s ease-in-out infinite;
 }
