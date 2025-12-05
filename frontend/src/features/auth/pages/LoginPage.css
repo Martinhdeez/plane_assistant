@@ -1,0 +1,149 @@
+.auth-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* Same sky gradient as landing page */
+  background: linear-gradient(180deg, #039be5 0%, #4fc3f7 40%, #b3e5fc 100%);
+  background-attachment: fixed;
+  padding: var(--spacing-lg) var(--spacing-md);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative clouds on both sides */
+.auth-page::before,
+.auth-page::after {
+  content: '';
+  position: absolute;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M18.5 12c.83 0 1.5.67 1.5 1.5S19.33 15 18.5 15H6.5C5.12 15 4 13.88 4 12.5S5.12 10 6.5 10c.09 0 .17.01.25.02C7.3 8.2 8.86 7 10.75 7c1.67 0 3.07.92 3.8 2.27C14.96 9.11 15.46 9 16 9c1.38 0 2.5 1.12 2.5 2.5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.7;
+  animation: floatCloudSlow 40s linear infinite;
+}
+
+.auth-page::before {
+  width: 250px;
+  height: 120px;
+  top: 15%;
+  left: -50px;
+}
+
+.auth-page::after {
+  width: 300px;
+  height: 150px;
+  top: 60%;
+  right: -80px;
+  animation-direction: reverse;
+  animation-duration: 50s;
+}
+
+/* Additional clouds */
+.auth-container::before,
+.auth-container::after {
+  content: '';
+  position: absolute;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M18.5 12c.83 0 1.5.67 1.5 1.5S19.33 15 18.5 15H6.5C5.12 15 4 13.88 4 12.5S5.12 10 6.5 10c.09 0 .17.01.25.02C7.3 8.2 8.86 7 10.75 7c1.67 0 3.07.92 3.8 2.27C14.96 9.11 15.46 9 16 9c1.38 0 2.5 1.12 2.5 2.5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.auth-container::before {
+  width: 180px;
+  height: 90px;
+  top: -60px;
+  left: -100px;
+}
+
+.auth-container::after {
+  width: 200px;
+  height: 100px;
+  bottom: -50px;
+  right: -120px;
+}
+
+@keyframes floatCloudSlow {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(120vw); }
+}
+
+.auth-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 500px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.auth-logo {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.auth-logo h1 {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 900;
+  color: var(--primary-dark);
+  margin-bottom: var(--spacing-xs);
+  /* White halo for readability */
+  text-shadow: 
+    2px 2px 0px #ffffff,
+    -2px -2px 0px #ffffff,
+    2px -2px 0px #ffffff,
+    -2px 2px 0px #ffffff,
+    0 4px 12px rgba(0, 30, 60, 0.2);
+}
+
+.auth-logo p {
+  color: var(--primary-dark);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-shadow: 
+    1px 1px 0px #ffffff,
+    -1px -1px 0px #ffffff,
+    1px -1px 0px #ffffff,
+    -1px 1px 0px #ffffff;
+}
+
+.back-to-home {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--primary-dark);
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+}
+
+.back-to-home:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateX(-4px);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .auth-page {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+}

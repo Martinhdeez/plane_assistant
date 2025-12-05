@@ -196,13 +196,13 @@
   transform: translateX(-50%);
   animation: float 3s ease-in-out infinite;
   cursor: pointer;
-  color: var(--primary-blue);
+  color: var(--primary-dark); /* Changed to dark blue/black */
 }
 
 .scroll-arrow {
   width: 24px;
   height: 40px;
-  border: 2px solid var(--primary-blue);
+  border: 2px solid var(--primary-dark); /* Changed to dark blue/black */
   border-radius: 12px;
   position: relative;
 }
@@ -215,7 +215,7 @@
   transform: translateX(-50%);
   width: 4px;
   height: 4px;
-  background: var(--primary-blue);
+  background: var(--primary-dark); /* Changed to dark blue/black */
   border-radius: 50%;
   animation: scrollDot 2s ease-in-out infinite;
 }
