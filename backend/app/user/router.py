@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.core.database import get_db
-from app.core.security import get_password_hash
-from app.user.schemas import UserCreate, UserResponse
+from app.core.security import get_password_hash, verify_password
+from app.user.schemas import UserCreate, UserResponse, UserUpdate, PasswordUpdate
 from app.user.user import User
 from app.auth.dependencies import get_current_user
 
@@ -36,6 +36,50 @@ async def create_user(user: UserCreate, db: Annotated[AsyncSession, Depends(get_
 @router.get("/me", response_model=UserResponse)
 async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
     return current_user
+
+@router.put("/me", response_model=UserResponse)
+async def update_user_me(
+    user_update: UserUpdate,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)]
+):
+    """Update current user's information"""
+    # Check if new email/username already exists (if being changed)
+    if user_update.email and user_update.email != current_user.email:
+        result = await db.execute(select(User).where(User.email == user_update.email))
+        if result.scalars().first():
+            raise HTTPException(status_code=400, detail="Email already registered")
+        current_user.email = user_update.email
+    
+    if user_update.username and user_update.username != current_user.username:
+        result = await db.execute(select(User).where(User.username == user_update.username))
+        if result.scalars().first():
+            raise HTTPException(status_code=400, detail="Username already taken")
+        current_user.username = user_update.username
+    
+    await db.commit()
+    await db.refresh(current_user)
+    return current_user
+
+@router.patch("/me/password")
+async def update_password(
+    password_update: PasswordUpdate,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)]
+):
+    """Update current user's password"""
+    # Verify current password
+    if not verify_password(password_update.current_password, current_user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Current password is incorrect"
+        )
+    
+    # Update password
+    current_user.hashed_password = get_password_hash(password_update.new_password)
+    await db.commit()
+    
+    return {"message": "Password updated successfully"}
 
 @router.get("/{user_id}", response_model=UserResponse)
 async def read_user(

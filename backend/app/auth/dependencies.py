@@ -20,14 +20,15 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: An
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        user_id: str = payload.get("sub")
+        if user_id is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
+        token_data = TokenData(username=user_id)  # Reusing TokenData, but storing user_id
     except JWTError:
         raise credentials_exception
     
-    result = await db.execute(select(User).where(User.username == token_data.username))
+    # Query by user ID instead of username
+    result = await db.execute(select(User).where(User.id == int(user_id)))
     user = result.scalars().first()
     if user is None:
         raise credentials_exception
