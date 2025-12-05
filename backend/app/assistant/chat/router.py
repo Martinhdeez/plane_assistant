@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from app.core.database import get_db
@@ -73,31 +73,51 @@ async def get_chat(
     db: Annotated[AsyncSession, Depends(get_db)]
 ):
     """Get a specific chat with all its messages."""
+    from app.core.storage import storage_service
+    
     result = await db.execute(
         select(Chat).where(Chat.id == chat_id, Chat.user_id == current_user.id)
     )
     chat = result.scalars().first()
     
     if not chat:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Chat not found"
-        )
+        raise HTTPException(status_code=404, detail="Chat not found")
     
     # Get messages
-    messages_result = await db.execute(
+    result = await db.execute(
         select(Message)
         .where(Message.chat_id == chat_id)
         .order_by(Message.created_at.asc())
     )
-    messages = messages_result.scalars().all()
+    messages = result.scalars().all()
+    
+    # Convert messages to response format with image URLs
+    message_responses = []
+    for msg in messages:
+        msg_dict = {
+            "id": msg.id,
+            "chat_id": msg.chat_id,
+            "role": msg.role,
+            "content": msg.content,
+            "created_at": msg.created_at,
+            "has_image": msg.has_image,
+            "image_filename": msg.image_filename
+        }
+        
+        # Add image URL if message has image
+        if msg.has_image and msg.image_path:
+            msg_dict["image_url"] = storage_service.get_image_url(msg.image_path)
+        else:
+            msg_dict["image_url"] = None
+            
+        message_responses.append(MessageResponse(**msg_dict))
     
     return ChatWithMessages(
         id=chat.id,
         user_id=chat.user_id,
         title=chat.title,
         created_at=chat.created_at,
-        messages=[MessageResponse.model_validate(msg) for msg in messages]
+        messages=message_responses
     )
 
 @router.patch("/{chat_id}", response_model=ChatResponse)
@@ -159,14 +179,18 @@ async def delete_chat(
     await db.delete(chat)
     await db.commit()
 
-@router.post("/{chat_id}/messages", response_model=MessageResponse)
+@router.post("/{chat_id}/messages", response_model=dict)
 async def send_message(
     chat_id: int,
-    message_data: MessageCreate,
     current_user: Annotated[User, Depends(get_current_user)],
-    db: Annotated[AsyncSession, Depends(get_db)]
+    db: Annotated[AsyncSession, Depends(get_db)],
+    content: str = Form(...),
+    image: UploadFile | None = File(None)
 ):
-    """Send a message in a chat and get AI response."""
+    """Send a message in a chat (with optional image) and get AI response."""
+    from app.core.storage import storage_service
+    from app.assistant.image_processor import image_processor
+    
     # Verify chat exists and belongs to user
     result = await db.execute(
         select(Chat).where(Chat.id == chat_id, Chat.user_id == current_user.id)
@@ -193,22 +217,65 @@ async def send_message(
         for msg in history
     ]
     
+    # Handle image upload if present
+    user_image_info = None
+    if image:
+        user_image_info = await storage_service.save_user_image(
+            user_id=current_user.id,
+            chat_id=chat_id,
+            file=image
+        )
+    
     # Save user message
     user_message = Message(
         chat_id=chat_id,
         role=MessageRole.USER,
-        content=message_data.content
+        content=content,
+        has_image=bool(user_image_info),
+        image_path=user_image_info["path"] if user_image_info else None,
+        image_filename=user_image_info["filename"] if user_image_info else None,
+        image_size=user_image_info["size"] if user_image_info else None,
+        image_type=user_image_info["type"] if user_image_info else None
     )
     db.add(user_message)
     await db.commit()
     await db.refresh(user_message)
     
-    # Get AI response with context
+    # Get AI response
     try:
-        ai_response_content = await gemini_service.chat(
-            user_message=message_data.content,
-            message_history=message_history
-        )
+        if user_image_info:
+            # Process with Gemini Vision
+            ai_response = await gemini_service.chat_with_image(
+                user_message=content,
+                image_path=user_image_info["path"],
+                message_history=message_history
+            )
+            
+            # Draw annotations on image
+            if ai_response.get("annotations"):
+                annotated_image_bytes = image_processor.draw_annotations(
+                    image_path=user_image_info["path"],
+                    annotations=ai_response["annotations"]
+                )
+                
+                # Save annotated image
+                ai_image_info = await storage_service.save_ai_image(
+                    user_id=current_user.id,
+                    chat_id=chat_id,
+                    image_data=annotated_image_bytes
+                )
+            else:
+                ai_image_info = None
+            
+            ai_response_content = ai_response["text"]
+        else:
+            # Regular text chat
+            ai_response_content = await gemini_service.chat(
+                user_message=content,
+                message_history=message_history
+            )
+            ai_image_info = None
+            
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -219,10 +286,33 @@ async def send_message(
     ai_message = Message(
         chat_id=chat_id,
         role=MessageRole.ASSISTANT,
-        content=ai_response_content
+        content=ai_response_content,
+        has_image=bool(ai_image_info),
+        image_path=ai_image_info["path"] if ai_image_info else None,
+        image_filename=ai_image_info["filename"] if ai_image_info else None,
+        image_size=ai_image_info["size"] if ai_image_info else None,
+        image_type=ai_image_info["type"] if ai_image_info else None
     )
     db.add(ai_message)
     await db.commit()
     await db.refresh(ai_message)
     
-    return MessageResponse.model_validate(ai_message)
+    # Return both messages with image URLs
+    return {
+        "user_message": {
+            "id": user_message.id,
+            "role": user_message.role.value,
+            "content": user_message.content,
+            "has_image": user_message.has_image,
+            "image_url": storage_service.get_image_url(user_message.image_path) if user_message.has_image else None,
+            "created_at": user_message.created_at.isoformat()
+        },
+        "ai_message": {
+            "id": ai_message.id,
+            "role": ai_message.role.value,
+            "content": ai_message.content,
+            "has_image": ai_message.has_image,
+            "image_url": storage_service.get_image_url(ai_message.image_path) if ai_message.has_image else None,
+            "created_at": ai_message.created_at.isoformat()
+        }
+    }
