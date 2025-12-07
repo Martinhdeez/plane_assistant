@@ -76,10 +76,7 @@ function LandingPage() {
           <p className="hero-subtitle fade-in-up" style={{ animationDelay: '0.2s' }}>
             Tu asistente inteligente especializado en mantenimiento aeronáutico
           </p>
-          <p className="hero-description fade-in-up" style={{ animationDelay: '0.4s' }}>
-            Accede a información técnica precisa, procedimientos de seguridad y guías paso a paso
-            para el mantenimiento de aeronaves con la ayuda de IA avanzada.
-          </p>
+
           <div className="hero-buttons fade-in-up" style={{ animationDelay: '0.6s' }}>
             <a href="/login" className="btn btn-primary">Comenzar Ahora</a>
             <a href="#features" className="btn btn-secondary">Conocer Más</a>

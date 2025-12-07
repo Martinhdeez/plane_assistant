@@ -1,24 +1,12 @@
-const API_BASE_URL = 'http://localhost:8000/api';
-
-/**
- * Get authentication headers
- */
-function getAuthHeaders() {
-  const token = localStorage.getItem('access_token');
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`
-  };
-}
+import { authenticatedFetch, getApiUrl } from '../../../utils/api';
 
 /**
  * Get current user information
  * @returns {Promise<{id: number, username: string, email: string}>}
  */
 export async function getCurrentUser() {
-  const response = await fetch(`${API_BASE_URL}/users/me`, {
+  const response = await authenticatedFetch(getApiUrl('/users/me'), {
     method: 'GET',
-    headers: getAuthHeaders(),
   });
 
   if (!response.ok) {
@@ -35,9 +23,8 @@ export async function getCurrentUser() {
  * @returns {Promise<Object>}
  */
 export async function updateUser(data) {
-  const response = await fetch(`${API_BASE_URL}/users/me`, {
+  const response = await authenticatedFetch(getApiUrl('/users/me'), {
     method: 'PUT',
-    headers: getAuthHeaders(),
     body: JSON.stringify(data),
   });
 
@@ -56,9 +43,8 @@ export async function updateUser(data) {
  * @returns {Promise<Object>}
  */
 export async function updatePassword(currentPassword, newPassword) {
-  const response = await fetch(`${API_BASE_URL}/users/me/password`, {
+  const response = await authenticatedFetch(getApiUrl('/users/me/password'), {
     method: 'PATCH',
-    headers: getAuthHeaders(),
     body: JSON.stringify({
       current_password: currentPassword,
       new_password: newPassword

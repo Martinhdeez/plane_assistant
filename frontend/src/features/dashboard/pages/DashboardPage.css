@@ -38,78 +38,181 @@
 .cloud-11 { top: 85%; left: 80%; font-size: 90px; }
 .cloud-12 { top: 5%; left: 85%; }
 
+/* Modern Topbar */
 .dashboard-header {
-  background: rgba(255, 255, 255, 0.95);
-  border-bottom: 1px solid var(--border-color);
-  padding: var(--spacing-md) 0;
-  backdrop-filter: blur(10px);
+  /* WHITER background with Blue Tint */
+  background: rgba(245, 250, 255, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 0.6rem 0;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 4px 30px rgba(0, 30, 60, 0.04);
 }
 
 .dashboard-header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1400px;
+  padding: 0 2rem;
+  width: 100%;
+}
+
+.dashboard-logo {
+  display: flex;
+  align-items: center;
+}
+
+/* Update the LINK inside to ensure it doesn't override color */
+.dashboard-logo a {
+  text-decoration: none !important;
+  color: #FFFFFF !important;
 }
 
 .dashboard-logo h1 {
   font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--primary-dark);
-  margin: 0;
-  cursor: pointer;
-  transition: color var(--transition-fast);
+  /* FUTURISTIC STYLES */
+  font-family: 'Orbitron', sans-serif !important;
+  font-weight: 800 !important;
+  text-transform: uppercase; /* Futuristic usually means uppercase */
+  letter-spacing: 0.1em; /* Wide spacing for tech look */
+  
+  /* PURE WHITE with NEON GLOW */
+  color: #FFFFFF !important;
+  
+  /* Reset interfering gradients */
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: initial !important;
+  text-fill-color: initial !important;
+  
+  /* Strong Cyan/Blue Neon Glow */
+  text-shadow: 
+    0 0 5px rgba(255, 255, 255, 1),
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 20px rgba(0, 229, 255, 0.8), /* Cyan glow */
+    0 0 40px rgba(0, 229, 255, 0.4) !important;
+    
+  filter: none !important;
+  
+  /* Ensure icon matches */
+  fill: #FFFFFF !important;
+}
+
+/* Force emoji to be white using filters */
+.logo-icon {
+  filter: grayscale(100%) brightness(200%);
+  display: inline-block; /* Required for transform/filter sometimes */
+  margin-right: 0.5rem;
 }
 
 .dashboard-logo h1:hover {
-  color: var(--primary-blue);
+  transform: scale(1.02);
+  /* Even stronger glow on hover */
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 1),
+    0 0 20px rgba(255, 255, 255, 0.8),
+    0 0 40px rgba(0, 229, 255, 1),
+    0 0 80px rgba(0, 229, 255, 0.6) !important;
 }
 
+
+
+/* User Section - Divided into two dark sections */
 .dashboard-user {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: 1rem; /* Physical separation between sections */
+  background: transparent; /* Top container is transparent */
+  padding: 0;
+  border: none;
+  box-shadow: none;
 }
 
+/* Section 1: User Profile - Dark Pill */
 .user-info {
+  background: #001E3C; /* Dark Navy Background */
+  color: white; /* White Text */
   text-align: right;
   cursor: pointer;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  transition: background var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* More gap */
+  padding: 0.6rem 1.2rem; /* INCREASED PADDING significantly */
+  border-radius: 50px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 30, 60, 0.15);
+  border: 1px solid #002f5e;
 }
 
 .user-info:hover {
-  background: rgba(2, 119, 189, 0.1);
+  background: #002f5e; /* Slightly lighter on hover */
+  transform: translateY(-1px);
+}
+
+.user-avatar-placeholder {
+  width: 38px;
+  height: 38px;
+  /* BLUE BACKGROUND as requested */
+  background: #0288d1 !important; 
+  /* WHITE LETTER as requested */
+  color: #FFFFFF !important; 
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border: 1px solid #FFFFFF; /* Added white border for better definition against dark pill */
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
 }
 
 .user-name {
-  font-weight: 600;
-  color: var(--primary-dark);
-  font-size: 0.95rem;
-}
-
-.user-email {
+  font-weight: 700;
+  color: white; /* White text */
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  line-height: 1.2;
 }
 
+.user-role {
+  font-size: 0.7rem;
+  color: #B0BEC5; /* Lighter grey for role */
+  font-weight: 500;
+}
+
+/* Section 2: Logout Button - Separate Dark Button */
 .btn-logout {
-  padding: var(--spacing-xs) var(--spacing-md);
-  background: transparent;
-  color: var(--primary-blue);
-  border: 2px solid var(--primary-blue);
-  border-radius: var(--radius-sm);
-  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  /* Dark Red/Navy Mix for distinct "Exit" feel or keep Dark Navy */
+  background: #001E3C; 
+  color: #ff8a80; /* Light Red text */
+  border: 1px solid #002f5e;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .btn-logout:hover {
-  background: var(--primary-blue);
+  background: #b71c1c; /* Turn Red on hover */
   color: white;
+  border-color: #b71c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(183, 28, 28, 0.3);
 }
 
 .dashboard-content {
@@ -124,25 +227,34 @@
 }
 
 .dashboard-title h2 {
+  font-family: 'Orbitron', sans-serif; /* Futuristic Font */
   font-size: clamp(2rem, 4vw, 2.5rem);
-  color: var(--primary-dark);
+  color: #FFFFFF; /* Pure White */
   font-weight: 800;
   margin-bottom: var(--spacing-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  
+  /* NEON GLOW MATCHING LOGO */
   text-shadow: 
-    2px 2px 0px #ffffff,
-    -2px -2px 0px #ffffff,
-    2px -2px 0px #ffffff,
-    -2px 2px 0px #ffffff;
+    0 0 5px rgba(255, 255, 255, 1),
+    0 0 10px rgba(255, 255, 255, 0.6),
+    0 0 20px rgba(0, 229, 255, 0.6),
+    0 0 30px rgba(0, 229, 255, 0.4);
 }
 
 .dashboard-title p {
-  color: var(--primary-dark);
-  font-weight: 600;
+  font-family: 'Orbitron', sans-serif;
+  /* DARK NAVY BLUE for high contrast against light sky/clouds */
+  color: #002147; 
+  font-weight: 600; /* Increased weight for legibility */
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  
+  /* White Halo/Glow to separate text from background */
   text-shadow: 
-    1px 1px 0px #ffffff,
-    -1px -1px 0px #ffffff,
-    1px -1px 0px #ffffff,
-    -1px 1px 0px #ffffff;
+    0 0 10px rgba(255, 255, 255, 0.9),
+    0 0 5px rgba(255, 255, 255, 1);
 }
 
 .chats-section {

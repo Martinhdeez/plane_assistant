@@ -90,22 +90,23 @@
 }
 
 .settings-button {
-  background: transparent;
-  border: 2px solid var(--primary-blue);
-  color: var(--primary-blue);
+  background: #0288d1; /* Blue background */
+  border: none;
+  color: white; /* White icon */
   font-size: 1.2rem;
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-sm);
+  border-radius: 50%; /* Circle */
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .settings-button:hover {
-  background: var(--primary-blue);
+  background: #01579B;
   transform: rotate(90deg);
 }
 
@@ -161,23 +162,26 @@
 }
 
 .back-button {
-  padding: var(--spacing-xs) var(--spacing-md);
-  background: transparent;
-  color: var(--primary-blue);
-  border: 2px solid var(--primary-blue);
-  border-radius: var(--radius-sm);
+  padding: 0.5rem 1rem;
+  /* Style matching user request: Blue background */
+  background: #0288d1;
+  color: white;
+  border: none;
+  border-radius: 20px; /* Pill shape */
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: all 0.2s ease;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .back-button:hover {
-  background: var(--primary-blue);
+  background: #01579B;
   color: white;
+  transform: translateY(-1px);
 }
 
 .chat-container {
@@ -294,26 +298,28 @@
 }
 
 .image-modal-close {
-  position: absolute;
-  top: -40px;
-  right: 0;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
+  position: fixed; /* Fixed to viewport to prevent going off-screen */
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  color: white;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   font-size: 24px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-fast);
-  color: var(--primary-dark);
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  z-index: 1001; /* Ensure above image */
 }
 
 .image-modal-close:hover {
-  background: white;
-  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.4);
+  transform: rotate(90deg);
 }
 
 .typing-indicator {
@@ -423,23 +429,24 @@
 
 /* Attach button */
 .attach-button {
-  background: transparent;
-  border: 2px solid var(--primary-blue);
-  color: var(--primary-blue);
+  background: #0288d1;
+  border: none;
+  color: white;
   font-size: 1.5rem;
   width: 50px;
   height: 50px;
-  border-radius: var(--radius-md);
+  border-radius: 50%; /* Circle */
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .attach-button:hover:not(:disabled) {
-  background: var(--primary-blue);
+  background: #01579B;
   transform: translateY(-2px);
 }
 

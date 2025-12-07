@@ -1,24 +1,12 @@
-const API_BASE_URL = 'http://localhost:8000/api';
-
-/**
- * Get authentication token from localStorage
- */
-function getAuthHeaders() {
-    const token = localStorage.getItem('access_token');
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    };
-}
+import { authenticatedFetch, getApiUrl } from '../../../utils/api';
 
 /**
  * Get all chats for the current user
  * @returns {Promise<Array>}
  */
 export async function getChats() {
-    const response = await fetch(`${API_BASE_URL}/chats`, {
+    const response = await authenticatedFetch(getApiUrl('/chats'), {
         method: 'GET',
-        headers: getAuthHeaders(),
     });
 
     if (!response.ok) {
@@ -36,9 +24,8 @@ export async function getChats() {
  * @returns {Promise<Object>}
  */
 export async function createChat(title) {
-    const response = await fetch(`${API_BASE_URL}/chats/`, {
+    const response = await authenticatedFetch(getApiUrl('/chats/'), {
         method: 'POST',
-        headers: getAuthHeaders(),
         body: JSON.stringify({ title }),
     });
 
@@ -56,9 +43,8 @@ export async function createChat(title) {
  * @returns {Promise<Object>}
  */
 export async function getChat(chatId) {
-    const response = await fetch(`${API_BASE_URL}/chats/${chatId}`, {
+    const response = await authenticatedFetch(getApiUrl(`/chats/${chatId}`), {
         method: 'GET',
-        headers: getAuthHeaders(),
     });
 
     if (!response.ok) {
@@ -75,9 +61,8 @@ export async function getChat(chatId) {
  * @returns {Promise<void>}
  */
 export async function deleteChat(chatId) {
-    const response = await fetch(`${API_BASE_URL}/chats/${chatId}`, {
+    const response = await authenticatedFetch(getApiUrl(`/chats/${chatId}`), {
         method: 'DELETE',
-        headers: getAuthHeaders(),
     });
 
     if (!response.ok) {
@@ -93,9 +78,8 @@ export async function deleteChat(chatId) {
  * @returns {Promise<Object>}
  */
 export async function updateChatTitle(chatId, title) {
-    const response = await fetch(`${API_BASE_URL}/chats/${chatId}`, {
+    const response = await authenticatedFetch(getApiUrl(`/chats/${chatId}`), {
         method: 'PATCH',
-        headers: getAuthHeaders(),
         body: JSON.stringify({ title }),
     });
 
@@ -115,8 +99,6 @@ export async function updateChatTitle(chatId, title) {
  * @returns {Promise<Object>} Response with user_message and ai_message
  */
 export async function sendMessage(chatId, content, image = null) {
-    const token = localStorage.getItem('access_token');
-
     // Use FormData to support file uploads
     const formData = new FormData();
     formData.append('content', content);
@@ -124,11 +106,11 @@ export async function sendMessage(chatId, content, image = null) {
         formData.append('image', image);
     }
 
-    const response = await fetch(`${API_BASE_URL}/chats/${chatId}/messages`, {
+    const response = await authenticatedFetch(getApiUrl(`/chats/${chatId}/messages`), {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${token}`
             // Don't set Content-Type - browser will set it with boundary for FormData
+            'Content-Type': undefined  // Override default JSON content type
         },
         body: formData,
     });
