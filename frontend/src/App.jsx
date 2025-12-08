@@ -5,6 +5,7 @@ import RegisterPage from './features/auth/pages/RegisterPage';
 import DashboardPage from './features/dashboard/pages/DashboardPage';
 import ChatPage from './features/chat/pages/ChatPage';
 import ProfilePage from './features/profile/pages/ProfilePage';
+import PartsViewerPage from './features/parts-viewer/pages/PartsViewerPage';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/chat/:chatId" element={<ChatPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/parts-viewer" element={<PartsViewerPage />} />
       </Routes>
     </Router>
   );

@@ -38,18 +38,29 @@
 .cloud-11 { top: 85%; left: 80%; font-size: 90px; }
 .cloud-12 { top: 5%; left: 85%; }
 
-/* Modern Topbar */
+/* Modern Topbar - Dark Gray Glassmorphism */
 .dashboard-header {
-  /* WHITER background with Blue Tint */
-  background: rgba(245, 250, 255, 0.9);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
-  padding: 0.6rem 0;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  /* Semi-transparent dark gray background - less transparent */
+  background: rgba(40, 40, 45, 0.9);
+  
+  /* Defined border for modern look */
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.4rem 0; /* Reduced height */
+  
+  /* Strong blur effect for glassmorphism */
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 30px rgba(0, 30, 60, 0.04);
+  
+  /* Enhanced shadow for depth and separation */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.2) inset;
 }
 
 .dashboard-header .container {
@@ -88,7 +99,6 @@
   -webkit-background-clip: unset !important;
   background-clip: unset !important;
   -webkit-text-fill-color: initial !important;
-  text-fill-color: initial !important;
   
   /* Strong Cyan/Blue Neon Glow */
   text-shadow: 
@@ -101,13 +111,24 @@
   
   /* Ensure icon matches */
   fill: #FFFFFF !important;
+  
+  display: flex !important;
+  flex-direction: row !important; /* STRICT ROW */
+  flex-wrap: nowrap !important; /* NO WRAPPING */
+  align-items: center !important;
+  justify-content: flex-start !important;
+  white-space: nowrap !important;
 }
 
 /* Force emoji to be white using filters */
 .logo-icon {
-  filter: grayscale(100%) brightness(200%);
-  display: inline-block; /* Required for transform/filter sometimes */
-  margin-right: 0.5rem;
+  width: 1.8rem; /* Sizing for SVG */
+  height: 1.8rem;
+  margin-right: 0.8rem;
+  /* Remove old emoji filters, SVG uses currentColor (white) */
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
+  display: flex;
+  align-items: center;
 }
 
 .dashboard-logo h1:hover {

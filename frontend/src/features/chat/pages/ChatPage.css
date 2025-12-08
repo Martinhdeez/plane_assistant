@@ -8,16 +8,29 @@
 }
 
 .chat-header {
-  background: rgba(255, 255, 255, 0.98);
-  border-bottom: 1px solid var(--border-color);
-  padding: var(--spacing-md) 0;
-  backdrop-filter: blur(10px);
+  /* Semi-transparent dark gray background - matching dashboard */
+  background: rgba(40, 40, 45, 0.9);
+  
+  /* Defined border for modern look */
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.4rem 0; /* Reduced height */
+  
+  /* Strong blur effect for glassmorphism */
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 100;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  /* Enhanced shadow for depth and separation */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.2) inset;
 }
 
 .chat-header .container {
@@ -28,8 +41,20 @@
 
 .chat-info h1 {
   font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--primary-dark);
+  /* Futuristic font matching dashboard */
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  
+  /* White with neon glow */
+  color: #FFFFFF;
+  text-shadow: 
+    0 0 5px rgba(255, 255, 255, 1),
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 20px rgba(0, 229, 255, 0.8),
+    0 0 40px rgba(0, 229, 255, 0.4);
+  
   margin: 0;
 }
 
@@ -65,13 +90,13 @@
 .title-input {
   width: 100%;
   font-size: 1.3rem;
+  font-family: 'Orbitron', sans-serif;
   font-weight: 700;
-  color: var(--primary-dark);
+  color: #FFFFFF;
   padding: var(--spacing-xs) var(--spacing-sm);
-  border: 2px solid var(--primary-blue);
+  border: 2px solid rgba(0, 229, 255, 0.6);
   border-radius: var(--radius-sm);
-  background: white;
-  font-family: inherit;
+  background: rgba(40, 40, 45, 0.8);
 }
 
 .title-input:focus {
@@ -90,24 +115,26 @@
 }
 
 .settings-button {
-  background: #0288d1; /* Blue background */
-  border: none;
-  color: white; /* White icon */
+  /* Dark Navy matching dashboard */
+  background: #001E3C;
+  border: 1px solid #002f5e;
+  color: white;
   font-size: 1.2rem;
   width: 40px;
   height: 40px;
-  border-radius: 50%; /* Circle */
+  border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .settings-button:hover {
-  background: #01579B;
-  transform: rotate(90deg);
+  background: #002f5e;
+  transform: rotate(90deg) translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 30, 60, 0.2);
 }
 
 .settings-dropdown {
@@ -162,26 +189,27 @@
 }
 
 .back-button {
-  padding: 0.5rem 1rem;
-  /* Style matching user request: Blue background */
-  background: #0288d1;
+  padding: 0.5rem 1.25rem;
+  /* Dark Navy matching dashboard */
+  background: #001E3C;
   color: white;
-  border: none;
-  border-radius: 20px; /* Pill shape */
-  font-weight: 600;
+  border: 1px solid #002f5e;
+  border-radius: 20px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .back-button:hover {
-  background: #01579B;
+  background: #002f5e;
   color: white;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 30, 60, 0.2);
 }
 
 .chat-container {
@@ -429,25 +457,27 @@
 
 /* Attach button */
 .attach-button {
-  background: #0288d1;
-  border: none;
+  /* Dark Navy matching dashboard */
+  background: #001E3C;
+  border: 1px solid #002f5e;
   color: white;
   font-size: 1.5rem;
   width: 50px;
   height: 50px;
-  border-radius: 50%; /* Circle */
+  border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .attach-button:hover:not(:disabled) {
-  background: #01579B;
+  background: #002f5e;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 30, 60, 0.2);
 }
 
 .attach-button:disabled {

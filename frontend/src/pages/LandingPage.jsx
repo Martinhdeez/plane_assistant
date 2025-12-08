@@ -71,7 +71,7 @@ function LandingPage() {
         </div>
         <div className="container hero-content">
           <h1 className="hero-title fade-in-up">
-            Plane Assistant
+            Aircraft Assistant
           </h1>
           <p className="hero-subtitle fade-in-up" style={{ animationDelay: '0.2s' }}>
             Tu asistente inteligente especializado en mantenimiento aeronáutico

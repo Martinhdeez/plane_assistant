@@ -96,7 +96,10 @@ function DashboardPage() {
         <div className="container">
           <div className="dashboard-logo">
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <h1><span className="logo-icon">✈️</span> Plane Assistant</h1>
+              <h1>
+                <img src="/custom_logo.jpg" alt="Logo" className="logo-icon" />
+                Aircraft Assistant
+              </h1>
             </Link>
           </div>
           <div className="dashboard-user">
@@ -131,6 +134,14 @@ function DashboardPage() {
               <h3>Nueva Conversación</h3>
               <p>Inicia una nueva consulta con tu asistente de mantenimiento</p>
             </div>
+
+            <Link to="/parts-viewer" style={{ textDecoration: 'none' }}>
+              <div className="create-chat-card">
+                <div className="create-chat-icon">🔧</div>
+                <h3>Visor 3D de Piezas</h3>
+                <p>Explora y visualiza piezas aeronáuticas en 3D</p>
+              </div>
+            </Link>
 
             {error && (
               <div className="error-message-dashboard">

@@ -306,7 +306,7 @@
 /* CTA Section */
 .cta {
   padding: 6rem 0;
-  background: var(--primary-deep); /* Solid professional dark blue */
+  
   width: 100%;
   color: white;
   position: relative;
