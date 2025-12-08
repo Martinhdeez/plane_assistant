@@ -52,6 +52,7 @@ function ChatHeader({
     <header className="chat-header">
       <div className="container">
         <div className="chat-info">
+          <img src="/custom_logo.jpg" alt="Logo" className="chat-logo" />
           {isEditingTitle ? (
             <div className="title-edit-container">
               <input

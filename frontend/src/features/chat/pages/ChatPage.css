@@ -39,6 +39,19 @@
   align-items: center;
 }
 
+.chat-info {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.chat-logo {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 4px;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
+}
+
 .chat-info h1 {
   font-size: 1.3rem;
   /* Futuristic font matching dashboard */

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import AuthForm from '../components/AuthForm';
 import { register, isAuthenticated } from '../services/authService';
+import TopBar from '../../shared/components/TopBar';
 import './RegisterPage.css';
 
 function RegisterPage() {
@@ -66,15 +67,9 @@ function RegisterPage() {
 
   return (
     <div className="auth-page">
+      <TopBar user={null} />
+      
       <div className="auth-container">
-        <a href="/" className="back-to-home">
-          ← Volver al inicio
-        </a>
-        
-        <div className="auth-logo">
-          <h1>Plane Assistant</h1>
-          <p>Crea tu cuenta profesional</p>
-        </div>
 
         <AuthForm
           title="Crear Cuenta"

@@ -13,31 +13,44 @@ function TopBar({ user, showAuth = true }) {
   return (
     <nav className="top-bar">
       <div className="top-bar-container">
-        <Link to="/dashboard" className="top-bar-logo">
+        <Link to="/" className="top-bar-logo">
           <img src="/custom_logo.jpg" alt="Logo" className="top-bar-logo-icon" />
           <span>Aircraft Assistant</span>
         </Link>
 
-        <div className="top-bar-links">
-          <Link to="/parts-viewer" className="top-bar-link">
-            🔧 Visor 3D
-          </Link>
-          <Link to="/histories" className="top-bar-link">
-            📋 Históricos
-          </Link>
-        </div>
-
-        {showAuth && user && (
+        {showAuth && (
           <div className="top-bar-user">
-            <Link to="/profile" className="user-info-link">
-              <div className="user-avatar">
-                {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
-              </div>
-              <span className="user-name">{user.username || 'Usuario'}</span>
-            </Link>
-            <button className="btn-logout-topbar" onClick={handleLogout}>
-              Cerrar Sesión
-            </button>
+            {user ? (
+              <>
+                <Link to="/dashboard" className="top-bar-nav-link">
+                  💬 Chats
+                </Link>
+                <Link to="/parts-viewer" className="top-bar-nav-link">
+                  🔧 Visor 3D
+                </Link>
+                <Link to="/histories" className="top-bar-nav-link">
+                  📋 Históricos
+                </Link>
+                <Link to="/profile" className="user-info-link">
+                  <div className="user-avatar">
+                    {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                  </div>
+                  <span className="user-name">{user.username || 'Usuario'}</span>
+                </Link>
+                <button className="btn-logout-topbar" onClick={handleLogout}>
+                  Cerrar Sesión
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="top-bar-nav-link">
+                  🔐 Iniciar Sesión
+                </Link>
+                <Link to="/register" className="top-bar-nav-link top-bar-register">
+                  ✨ Registrarse
+                </Link>
+              </>
+            )}
           </div>
         )}
       </div>

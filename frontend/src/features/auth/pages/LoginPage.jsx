@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import AuthForm from '../components/AuthForm';
 import { login, isAuthenticated } from '../services/authService';
+import TopBar from '../../shared/components/TopBar';
 import './LoginPage.css';
 
 function LoginPage() {
@@ -49,21 +50,14 @@ function LoginPage() {
 
   return (
     <div className="auth-page">
+      <TopBar user={null} />
+      
       <div className="auth-container">
-        <a href="/" className="back-to-home">
-          ← Volver al inicio
-        </a>
-        
         {successMessage && (
           <div className="success-message">
             {successMessage}
           </div>
         )}
-        
-        <div className="auth-logo">
-          <h1>Plane Assistant</h1>
-          <p>Inicia sesión en tu cuenta</p>
-        </div>
 
         <AuthForm
           title="Iniciar Sesión"

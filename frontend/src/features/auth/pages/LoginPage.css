@@ -3,12 +3,9 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   /* Same sky gradient as landing page */
   background: linear-gradient(180deg, #039be5 0%, #4fc3f7 40%, #b3e5fc 100%);
   background-attachment: fixed;
-  padding: var(--spacing-lg) var(--spacing-md);
   position: relative;
   overflow: hidden;
 }
@@ -77,6 +74,12 @@
   z-index: 1;
   width: 100%;
   max-width: 500px;
+  margin: 0 auto;
+  padding: var(--spacing-2xl) var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 80px); /* Subtract TopBar height */
   animation: fadeInUp 0.6s ease-out;
 }
 

@@ -1,8 +1,30 @@
+import { useState, useEffect } from 'react';
+import { isAuthenticated } from '../features/auth/services/authService';
+import { getCurrentUser } from '../features/profile/services/userService';
+import TopBar from '../features/shared/components/TopBar';
 import './LandingPage.css';
 
 function LandingPage() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (isAuthenticated()) {
+        try {
+          const userData = await getCurrentUser();
+          setUser(userData);
+        } catch (err) {
+          console.error('Error fetching user:', err);
+        }
+      }
+    };
+    fetchUser();
+  }, []);
+
   return (
     <div className="landing-page">
+      <TopBar user={user} />
+      
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-background">

@@ -1,6 +1,8 @@
 .top-bar {
   background: rgba(40, 40, 45, 0.9);
   border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
   padding: 0.5rem 0;
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
@@ -11,7 +13,7 @@
 }
 
 .top-bar-container {
-  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
@@ -48,36 +50,42 @@
   filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
 }
 
-.top-bar-links {
-  display: flex;
-  gap: 1rem;
-  flex: 1;
-  justify-content: center;
-}
-
-.top-bar-link {
-  padding: 0.5rem 1.5rem;
-  background: rgba(2, 119, 189, 0.2);
-  color: white;
-  text-decoration: none;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.2s;
-  border: 1px solid rgba(2, 119, 189, 0.3);
-  white-space: nowrap;
-}
-
-.top-bar-link:hover {
-  background: rgba(2, 119, 189, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(2, 119, 189, 0.3);
-}
-
 .top-bar-user {
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin-left: auto;
+}
+
+.top-bar-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: white;
+  padding: 0.6rem 1rem;
+  background: #001E3C;
+  border-radius: 50px;
+  border: 1px solid #002f5e;
+  transition: all 0.2s;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.top-bar-nav-link:hover {
+  background: #002f5e;
+  transform: translateY(-1px);
+}
+
+.top-bar-register {
+  background: linear-gradient(135deg, #0277bd 0%, #01579b 100%);
+  border-color: #0277bd;
+}
+
+.top-bar-register:hover {
+  background: linear-gradient(135deg, #01579b 0%, #003d6b 100%);
+  box-shadow: 0 4px 12px rgba(2, 119, 189, 0.4);
 }
 
 .user-info-link {
@@ -86,7 +94,7 @@
   gap: 0.8rem;
   text-decoration: none;
   color: white;
-  padding: 0.4rem 1rem;
+  padding: 0.6rem 1rem;
   background: #001E3C;
   border-radius: 50px;
   border: 1px solid #002f5e;
@@ -118,7 +126,7 @@
 }
 
 .btn-logout-topbar {
-  padding: 0.5rem 1.25rem;
+  padding: 0.6rem 1.25rem;
   background: #001E3C;
   color: #ff8a80;
   border: 1px solid #002f5e;
@@ -139,13 +147,13 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .top-bar-links {
+  .top-bar-user {
     gap: 0.5rem;
   }
 
-  .top-bar-link {
-    padding: 0.4rem 1rem;
-    font-size: 0.85rem;
+  .top-bar-nav-link {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
   }
 }
 
@@ -159,10 +167,10 @@
     font-size: 1.1rem;
   }
 
-  .top-bar-links {
-    order: 3;
+  .top-bar-user {
     width: 100%;
     justify-content: center;
+    flex-wrap: wrap;
   }
 
   .user-name {
