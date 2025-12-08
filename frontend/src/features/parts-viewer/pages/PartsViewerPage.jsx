@@ -133,15 +133,6 @@ const MOCK_PARTS = [
   // COMPONENTES ESTRUCTURALES
   {
     id: 13,
-    name: 'Eje Principal del Motor',
-    category: 'Estructura',
-    description: 'Eje principal del ensamblaje del motor turbofan.',
-    model_url: '/models/aircraft-parts/Turbine JET Engine- Project/Main Axis Assembly v11.stl',
-    thumbnail_url: null,
-    file_format: 'stl'
-  },
-  {
-    id: 14,
     name: 'Rodamiento de Alta Velocidad',
     category: 'Estructura',
     description: 'Rodamiento de alta velocidad del motor.',
