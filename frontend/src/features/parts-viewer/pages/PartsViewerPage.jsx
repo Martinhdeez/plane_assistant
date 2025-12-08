@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { isAuthenticated } from '../../auth/services/authService';
+import { getCurrentUser } from '../../profile/services/userService';
+import TopBar from '../../shared/components/TopBar';
 import PartsList from '../components/PartsList';
 import Viewer3D from '../components/Viewer3D';
 import PartCard from '../components/PartCard';
@@ -149,17 +152,37 @@ const MOCK_PARTS = [
 ];
 
 function PartsViewerPage() {
+  const navigate = useNavigate();
   const [parts, setParts] = useState([]);
   const [selectedPart, setSelectedPart] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Simular carga de datos
-    setTimeout(() => {
-      setParts(MOCK_PARTS);
-      setLoading(false);
-    }, 500);
-  }, []);
+    if (!isAuthenticated()) {
+      navigate('/login');
+      return;
+    }
+    fetchData();
+  }, [navigate]);
+
+  const fetchData = async () => {
+    try {
+      const userData = await getCurrentUser();
+      setUser(userData);
+      // Simular carga de datos
+      setTimeout(() => {
+        setParts(MOCK_PARTS);
+        setLoading(false);
+      }, 500);
+    } catch (err) {
+      console.error('Error fetching user:', err);
+      setTimeout(() => {
+        setParts(MOCK_PARTS);
+        setLoading(false);
+      }, 500);
+    }
+  };
 
   const handleSelectPart = (part) => {
     setSelectedPart(part);
@@ -177,15 +200,7 @@ function PartsViewerPage() {
         <div className="cloud cloud-6">☁️</div>
       </div>
 
-      {/* Header */}
-      <header className="parts-viewer-header">
-        <div className="container">
-          <Link to="/dashboard" className="back-link">
-            ← Volver al Dashboard
-          </Link>
-          <h1 className="page-title">Visor 3D de Piezas Aeronáuticas</h1>
-        </div>
-      </header>
+      <TopBar user={user} />
 
       {/* Main Content */}
       <main className="parts-viewer-content">

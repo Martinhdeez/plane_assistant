@@ -228,7 +228,7 @@
 /* Features Section */
 .features {
   padding: 6rem 0;
-  background-color: white; /* Clean white background for contrast */
+  background: rgba(0, 0, 0, 0.747); /* Clean white background for contrast */
   width: 100%;
   position: relative;
   z-index: 2;
@@ -255,6 +255,7 @@
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2.5rem;
   width: 100%;
+  back
 }
 
 .feature-card {

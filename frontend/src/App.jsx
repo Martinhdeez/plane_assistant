@@ -6,6 +6,7 @@ import DashboardPage from './features/dashboard/pages/DashboardPage';
 import ChatPage from './features/chat/pages/ChatPage';
 import ProfilePage from './features/profile/pages/ProfilePage';
 import PartsViewerPage from './features/parts-viewer/pages/PartsViewerPage';
+import HistoriesPage from './features/histories/pages/HistoriesPage';
 import './App.css';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/chat/:chatId" element={<ChatPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/parts-viewer" element={<PartsViewerPage />} />
+        <Route path="/histories" element={<HistoriesPage />} />
       </Routes>
     </Router>
   );

@@ -7,6 +7,7 @@ from app.auth.router import router as auth_router
 from app.user.router import router as user_router
 from app.assistant.router import router as assistant_router
 from app.assistant.chat.router import router as chat_router
+from app.maintenance_history.router import router as maintenance_history_router
 from app.auth.dependencies import get_current_user
 from app.user.user import User
 from typing import Annotated
@@ -29,6 +30,7 @@ app.include_router(auth_router, prefix="/api")
 app.include_router(user_router, prefix="/api")
 app.include_router(assistant_router, prefix="/api")
 app.include_router(chat_router, prefix="/api")
+app.include_router(maintenance_history_router)
 
 @app.get("/api")
 async def root():

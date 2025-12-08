@@ -3,13 +3,16 @@
   width: 100%;
   background: linear-gradient(180deg, #039be5 0%, #4fc3f7 40%, #b3e5fc 100%);
   background-attachment: fixed;
-  padding: var(--spacing-2xl) 0;
+  position: relative;
+  overflow-x: hidden;
 }
 
 .profile-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  padding: var(--spacing-2xl) var(--spacing-md);
+  position: relative;
+  z-index: 2;
 }
 
 .profile-header {

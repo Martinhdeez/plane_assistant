@@ -1,7 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getChat, sendMessage, updateChatTitle, deleteChat } from '../services/chatService';
+import { generateHistory } from '../../histories/services/historiesService';
 import { isAuthenticated } from '../../auth/services/authService';
+import ChatHeader from '../components/ChatHeader';
+import MessageBubble from '../components/MessageBubble';
+import ChatInputForm from '../components/ChatInputForm';
+import ImageModal from '../components/ImageModal';
+import TypingIndicator from '../components/TypingIndicator';
 import './ChatPage.css';
 
 function ChatPage() {
@@ -19,9 +25,8 @@ function ChatPage() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [modalImage, setModalImage] = useState(null);
+  const [generatingHistory, setGeneratingHistory] = useState(false);
   const messagesEndRef = useRef(null);
-  const titleInputRef = useRef(null);
-  const settingsMenuRef = useRef(null);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -29,35 +34,8 @@ function ChatPage() {
       navigate('/login');
       return;
     }
-
     fetchChat();
   }, [chatId, navigate]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  useEffect(() => {
-    // Focus input when editing starts
-    if (isEditingTitle && titleInputRef.current) {
-      titleInputRef.current.focus();
-      titleInputRef.current.select();
-    }
-  }, [isEditingTitle]);
-
-  useEffect(() => {
-    // Close settings menu when clicking outside
-    function handleClickOutside(event) {
-      if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target)) {
-        setShowSettingsMenu(false);
-      }
-    }
-
-    if (showSettingsMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [showSettingsMenu]);
 
   useEffect(() => {
     scrollToBottom();
@@ -69,36 +47,24 @@ function ChatPage() {
       const token = localStorage.getItem('access_token');
       if (!token || messages.length === 0) return;
 
-      // Find messages that need image loading
       const messagesToUpdate = [];
       
       for (let i = 0; i < messages.length; i++) {
         const message = messages[i];
-        // Only load if has image, has URL path, and not already a blob URL
         if (message.has_image && message.image_url && !message.image_url.startsWith('blob:')) {
-          console.log('Need to load image for message:', i, message.image_url);
           messagesToUpdate.push({ index: i, message });
         }
       }
 
-      if (messagesToUpdate.length === 0) {
-        console.log('No images to load');
-        return;
-      }
+      if (messagesToUpdate.length === 0) return;
 
-      console.log(`Loading ${messagesToUpdate.length} images...`);
-
-      // Load all images
       const updatedMessages = [...messages];
       
       for (const { index, message } of messagesToUpdate) {
         try {
-          // Build full URL - image_url already includes /api/images/
           const imageUrl = message.image_url.startsWith('http') 
             ? message.image_url
             : `http://localhost:8000${message.image_url}`;
-          
-          console.log('Fetching image from:', imageUrl);
           
           const response = await fetch(imageUrl, {
             headers: { 'Authorization': `Bearer ${token}` }
@@ -108,22 +74,17 @@ function ChatPage() {
             const blob = await response.blob();
             const blobUrl = URL.createObjectURL(blob);
             updatedMessages[index] = { ...message, image_url: blobUrl };
-            console.log('Image loaded successfully:', blobUrl);
-          } else {
-            console.error('Failed to load image:', response.status, response.statusText, imageUrl);
           }
         } catch (error) {
           console.error('Error loading image:', error);
         }
       }
 
-      // Update all messages at once
       setMessages(updatedMessages);
-      console.log('All images loaded, messages updated');
     };
 
     loadImages();
-  }, [messages.length]); // Run when messages array length changes
+  }, [messages.length]);
 
   const fetchChat = async () => {
     try {
@@ -147,21 +108,15 @@ function ChatPage() {
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         setError('Por favor selecciona un archivo de imagen válido');
         return;
       }
-      
-      // Validate file size (max 10MB)
       if (file.size > 10 * 1024 * 1024) {
         setError('La imagen es demasiado grande (máximo 10MB)');
         return;
       }
-      
       setSelectedImage(file);
-      
-      // Create preview
       const reader = new FileReader();
       reader.onload = (e) => setImagePreview(e.target.result);
       reader.readAsDataURL(file);
@@ -179,9 +134,7 @@ function ChatPage() {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     
-    if ((!inputMessage.trim() && !selectedImage) || sending) {
-      return;
-    }
+    if ((!inputMessage.trim() && !selectedImage) || sending) return;
 
     const userMessageContent = inputMessage.trim() || '(Imagen adjunta)';
     const imageToSend = selectedImage;
@@ -189,12 +142,8 @@ function ChatPage() {
     setInputMessage('');
     setSelectedImage(null);
     setImagePreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
     setSending(true);
 
-    // Add user message to UI immediately
     const userMessage = {
       role: 'user',
       content: userMessageContent,
@@ -205,25 +154,21 @@ function ChatPage() {
     setMessages(prev => [...prev, userMessage]);
 
     try {
-      // Send message and get AI response
       const response = await sendMessage(chatId, userMessageContent, imageToSend);
       
-      // Remove temporary preview URL
-      if (userMessage.image_url && userMessage.image_url.startsWith('blob:')) {
+      if (userMessage.image_url?.startsWith('blob:')) {
         URL.revokeObjectURL(userMessage.image_url);
       }
       
-      // Update messages with actual data from server
       setMessages(prev => {
-        const withoutTemp = prev.slice(0, -1); // Remove temporary user message
+        const withoutTemp = prev.slice(0, -1);
         return [...withoutTemp, response.user_message, response.ai_message];
       });
     } catch (err) {
       setError('Error al enviar el mensaje');
       console.error('Error sending message:', err);
-      // Remove user message if failed
       setMessages(prev => prev.slice(0, -1));
-      setInputMessage(userMessageContent); // Restore input
+      setInputMessage(userMessageContent);
     } finally {
       setSending(false);
     }
@@ -251,7 +196,6 @@ function ChatPage() {
       setIsEditingTitle(false);
     } catch (err) {
       setError('Error al actualizar el título');
-      console.error('Error updating title:', err);
     }
   };
 
@@ -260,27 +204,40 @@ function ChatPage() {
     setEditedTitle('');
   };
 
-  const handleTitleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSaveTitle();
-    } else if (e.key === 'Escape') {
-      handleCancelEdit();
+  const handleGenerateHistory = async () => {
+    if (messages.length < 4) {
+      setError('El chat debe tener al menos 4 mensajes para generar un histórico');
+      return;
+    }
+
+    const confirmed = window.confirm(
+      '¿Generar histórico de mantenimiento de esta conversación? La IA creará un resumen con las acciones realizadas.'
+    );
+    
+    if (!confirmed) return;
+
+    try {
+      setGeneratingHistory(true);
+      setError('');
+      const result = await generateHistory(chatId);
+      alert(`Histórico generado exitosamente. Puedes verlo en la sección de Históricos.`);
+    } catch (err) {
+      const errorMsg = err.response?.data?.detail || 'Error al generar el histórico';
+      setError(errorMsg);
+      console.error('Error generating history:', err);
+    } finally {
+      setGeneratingHistory(false);
     }
   };
 
   const handleDeleteChat = async () => {
-    if (!window.confirm('¿Estás seguro de que quieres eliminar esta conversación? Esta acción no se puede deshacer.')) {
-      return;
-    }
+    if (!window.confirm('¿Estás seguro de que quieres eliminar esta conversación?')) return;
 
     try {
       await deleteChat(chatId);
-      // Redirect to dashboard after successful deletion
       navigate('/dashboard');
     } catch (err) {
       setError('Error al eliminar la conversación');
-      console.error('Error deleting chat:', err);
       setShowSettingsMenu(false);
     }
   };
@@ -301,9 +258,7 @@ function ChatPage() {
       <div className="chat-page">
         <div className="error-chat">
           <p>{error}</p>
-          <Link to="/dashboard" className="back-button">
-            Volver al Dashboard
-          </Link>
+          <Link to="/dashboard" className="back-button">Volver al Dashboard</Link>
         </div>
       </div>
     );
@@ -311,181 +266,56 @@ function ChatPage() {
 
   return (
     <div className="chat-page">
-      <header className="chat-header">
-        <div className="container">
-          <div className="chat-info">
-            {isEditingTitle ? (
-              <div className="title-edit-container">
-                <input
-                  ref={titleInputRef}
-                  type="text"
-                  className="title-input"
-                  value={editedTitle}
-                  onChange={(e) => setEditedTitle(e.target.value)}
-                  onKeyDown={handleTitleKeyDown}
-                  onBlur={handleSaveTitle}
-                  maxLength={200}
-                />
-              </div>
-            ) : (
-              <h1 onClick={handleEditTitle} className="chat-title-editable">
-                {chat?.title || 'Conversación'}
-                <span className="edit-icon">✏️</span>
-              </h1>
-            )}
-          </div>
-          <div className="chat-header-actions">
-            <div className="settings-menu-container" ref={settingsMenuRef}>
-              <button 
-                className="settings-button"
-                onClick={() => setShowSettingsMenu(!showSettingsMenu)}
-                aria-label="Configuración"
-              >
-                ⚙️
-              </button>
-              {showSettingsMenu && (
-                <div className="settings-dropdown">
-                  <button 
-                    className="settings-option delete-option"
-                    onClick={handleDeleteChat}
-                  >
-                    🗑️ Eliminar conversación
-                  </button>
-                </div>
-              )}
-            </div>
-            <Link to="/dashboard" className="back-button">
-              ← Volver
-            </Link>
-          </div>
-        </div>
-      </header>
+      <ChatHeader
+        chat={chat}
+        isEditingTitle={isEditingTitle}
+        editedTitle={editedTitle}
+        setEditedTitle={setEditedTitle}
+        onEditTitle={handleEditTitle}
+        onSaveTitle={handleSaveTitle}
+        onCancelEdit={handleCancelEdit}
+        showSettingsMenu={showSettingsMenu}
+        setShowSettingsMenu={setShowSettingsMenu}
+        onDeleteChat={handleDeleteChat}
+        onGenerateHistory={handleGenerateHistory}
+        generatingHistory={generatingHistory}
+      />
 
       <div className="chat-container">
         <div className="messages-container">
           {messages.map((message, index) => (
-            <div key={index} className={`message ${message.role}`}>
-              <div className="message-avatar">
-                {message.role === 'user' ? '👤' : '✈️'}
-              </div>
-              <div className="message-content">
-                <p>{message.content}</p>
-                {message.has_image && message.image_url && (
-                  <div className="message-image-container">
-                    <img 
-                      src={message.image_url} 
-                      alt="Imagen adjunta" 
-                      className="message-image"
-                      onClick={() => setModalImage(message.image_url)}
-                      title="Click para ampliar"
-                    />
-                  </div>
-                )}
-                <div className="message-time">
-                  {formatTime(message.created_at)}
-                </div>
-              </div>
-            </div>
+            <MessageBubble
+              key={index}
+              message={message}
+              formatTime={formatTime}
+              onImageClick={setModalImage}
+            />
           ))}
           
-          {sending && (
-            <div className="message assistant">
-              <div className="message-avatar">✈️</div>
-              <div className="message-content">
-                <div className="typing-indicator">
-                  <div className="typing-dot"></div>
-                  <div className="typing-dot"></div>
-                  <div className="typing-dot"></div>
-                </div>
-              </div>
-            </div>
-          )}
+          {sending && <TypingIndicator />}
           
           <div ref={messagesEndRef} />
         </div>
       </div>
 
-      <div className="input-container">
-        {error && (
-          <div className="error-message-dashboard" style={{ marginBottom: 'var(--spacing-sm)' }}>
-            {error}
-          </div>
-        )}
-        
-        {/* Image preview */}
-        {imagePreview && (
-          <div className="image-preview-container">
-            <img src={imagePreview} alt="Preview" className="image-preview" />
-            <button 
-              type="button"
-              className="remove-image-button"
-              onClick={handleRemoveImage}
-              aria-label="Eliminar imagen"
-            >
-              ❌
-            </button>
-          </div>
-        )}
-        
-        <form className="input-form" onSubmit={handleSendMessage}>
-          {/* Hidden file input */}
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleImageSelect}
-            accept="image/*"
-            style={{ display: 'none' }}
-          />
-          
-          {/* Image upload button */}
-          <button
-            type="button"
-            className="attach-button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={sending}
-            aria-label="Adjuntar imagen"
-          >
-            📎
-          </button>
-          
-          <textarea
-            className="message-input"
-            placeholder="Escribe tu consulta sobre mantenimiento aeronáutico..."
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage(e);
-              }
-            }}
-            disabled={sending}
-          />
-          <button 
-            type="submit" 
-            className="send-button"
-            disabled={sending || (!inputMessage.trim() && !selectedImage)}
-          >
-            {sending ? 'Enviando...' : 'Enviar'}
-          </button>
-        </form>
-      </div>
-
-      {/* Image Modal */}
-      {modalImage && (
-        <div className="image-modal" onClick={() => setModalImage(null)}>
-          <div className="image-modal-content">
-            <button 
-              className="image-modal-close"
-              onClick={() => setModalImage(null)}
-              aria-label="Cerrar"
-            >
-              ✕
-            </button>
-            <img src={modalImage} alt="Imagen ampliada" />
-          </div>
+      {error && (
+        <div className="error-message-dashboard" style={{ margin: '0 1rem' }}>
+          {error}
         </div>
       )}
+
+      <ChatInputForm
+        inputMessage={inputMessage}
+        setInputMessage={setInputMessage}
+        sending={sending}
+        selectedImage={selectedImage}
+        imagePreview={imagePreview}
+        onImageSelect={handleImageSelect}
+        onRemoveImage={handleRemoveImage}
+        onSend={handleSendMessage}
+      />
+
+      <ImageModal imageUrl={modalImage} onClose={() => setModalImage(null)} />
     </div>
   );
 }

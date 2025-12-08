@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, updateUser, updatePassword } from '../services/userService';
 import { isAuthenticated } from '../../auth/services/authService';
+import TopBar from '../../shared/components/TopBar';
+import CloudsBackground from '../../shared/components/CloudsBackground';
 import './ProfilePage.css';
 
 function ProfilePage() {
@@ -97,6 +99,8 @@ function ProfilePage() {
   if (loading) {
     return (
       <div className="profile-page">
+        <CloudsBackground />
+        <TopBar user={user} />
         <div className="profile-container">
           <div className="loading-state">
             <div className="loading-spinner"></div>
@@ -109,11 +113,10 @@ function ProfilePage() {
 
   return (
     <div className="profile-page">
+      <CloudsBackground />
+      <TopBar user={user} />
+      
       <div className="profile-container">
-        <Link to="/dashboard" className="back-to-dashboard">
-          ← Volver al Dashboard
-        </Link>
-
         <div className="profile-header">
           <h1>Mi Perfil</h1>
           <p>Gestiona tu información personal</p>
