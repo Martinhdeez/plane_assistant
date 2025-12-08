@@ -5,7 +5,7 @@ function PartsList({ parts, onSelectPart, selectedPartId }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
-  const categories = ['Todos', 'Turbinas', 'Tren de Aterrizaje', 'Superficies de Control', 'Hélices', 'Aviónica'];
+  const categories = ['Todos', 'Aeronaves', 'Hélices', 'Motores', 'Compresión', 'Combustión', 'Turbina', 'Estructura'];
 
   const filteredParts = parts.filter(part => {
     const matchesSearch = part.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

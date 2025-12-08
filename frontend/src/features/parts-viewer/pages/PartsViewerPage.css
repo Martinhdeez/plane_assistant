@@ -124,6 +124,11 @@
 
 .viewer-section {
   flex: 1;
+  min-height: 500px;
+}
+
+.info-section {
+  min-height: 200px;
 }
 
 .loading-state {
@@ -146,35 +151,206 @@
   to { transform: rotate(360deg); }
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
+/* Responsive Design */
+
+/* Desktop with narrow sidebar (1024px - 1100px) */
+@media (max-width: 1100px) and (min-width: 1025px) {
   .viewer-layout {
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 280px 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .viewer-sidebar {
+    max-height: calc(100vh - 140px);
   }
 }
 
-@media (max-width: 768px) {
+/* Tablet & Small Desktop (481px - 1100px) */
+@media (max-width: 1100px) {
   .parts-viewer-header .container {
     flex-direction: column;
     gap: var(--spacing-sm);
     text-align: center;
+    padding: 0 1.5rem;
   }
   
   .page-title {
     font-size: 1.2rem;
   }
   
-  .viewer-layout {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-md);
+  .back-link {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
   }
   
+  /* Force single column layout */
+  .viewer-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important; /* Remove grid gap, use margins instead */
+    min-height: auto;
+    padding: 0;
+  }
+  
+  /* SEARCH SECTION - Block 1 */
   .viewer-sidebar {
-    position: static;
-    max-height: 400px;
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    max-height: none !important; /* Remove height limit */
+    order: 1;
+    margin-bottom: 24px !important; /* Moderate spacing */
+    z-index: 1;
+  }
+  
+  /* VIEWER CONTAINER - Block 2 */
+  .viewer-main {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 40px;
+    width: 100%;
+  }
+  
+  .viewer-section {
+    display: block !important;
+    min-height: 500px;
+    width: 100% !important;
+    margin-top: 16px !important; /* Moderate top margin */
+    margin-bottom: 24px !important;
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* INFO SECTION - Block 3 */
+  .info-section {
+    display: block !important;
+    min-height: auto;
+    margin-top: 16px !important; /* Moderate top margin */
+    position: relative;
+    z-index: 1;
+  }
+  
+  .parts-viewer-content .container {
+    padding: 0 1.5rem;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+/* Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+  .parts-viewer-page {
+    background: linear-gradient(180deg, #039be5 0%, #4fc3f7 50%, #b3e5fc 100%);
+    overflow-x: hidden;
+  }
+  
+  .parts-viewer-header {
+    padding: var(--spacing-sm) 0;
+  }
+  
+  .parts-viewer-header .container {
+    padding: 0 1rem;
+  }
+  
+  .page-title {
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+  }
+  
+  .back-link {
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+    max-width: 250px;
+  }
+  
+  .parts-viewer-content {
+    padding: var(--spacing-md) 0;
   }
   
   .parts-viewer-content .container {
     padding: 0 1rem;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  /* Force single column layout */
+  .viewer-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  
+  /* SEARCH SECTION - Block 1 */
+  .viewer-sidebar {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    max-height: none !important;
+    order: 1;
+    margin-bottom: 20px !important; /* Moderate spacing */
+    z-index: 1;
+  }
+  
+  /* VIEWER SECTION - Block 2 */
+  .viewer-section {
+    display: block !important;
+    min-height: 400px;
+    margin-top: 12px !important; /* Moderate top margin */
+    margin-bottom: 20px !important;
+    order: 2;
+    width: 100% !important;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .viewer-section .viewer3d-container {
+    width: 100%;
+  }
+  
+  /* INFO SECTION - Block 3 */
+  .info-section {
+    display: block !important;
+    margin-bottom: 1rem;
+    margin-top: 12px !important; /* Moderate top margin */
+    order: 3;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Optimize clouds for mobile */
+  .parts-viewer-page .cloud {
+    font-size: 50px;
+  }
+  
+  .parts-viewer-page .cloud-2,
+  .parts-viewer-page .cloud-4 {
+    font-size: 60px;
+  }
+}
+
+/* Extra Small Mobile (max-width: 360px) */
+@media (max-width: 360px) {
+  .page-title {
+    font-size: 0.9rem;
+  }
+  
+  .parts-viewer-content .container {
+    padding: 0 0.75rem;
+  }
+  
+  .viewer-sidebar {
+    max-height: 280px;
+  }
+  
+  .viewer-section {
+    min-height: 400px;
+    width: calc(100% + 1.5rem);
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+  }
+  
+  .parts-viewer-page .cloud {
+    font-size: 40px;
   }
 }

@@ -8,6 +8,20 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .viewer3d-container {
+    height: 450px;
+    border-radius: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .viewer3d-container {
+    height: 400px;
+  }
+}
+
 .viewer3d-canvas {
   width: 100%;
   height: 100%;
