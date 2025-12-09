@@ -3,8 +3,8 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* Same sky gradient as landing page */
-  background: linear-gradient(180deg, #039be5 0%, #4fc3f7 40%, #b3e5fc 100%);
+  /* Sky gradient background - darker blue */
+  background: linear-gradient(180deg, #0277bd 0%, #039be5 40%, #0288d1 100%);
   background-attachment: fixed;
   position: relative;
   overflow: hidden;

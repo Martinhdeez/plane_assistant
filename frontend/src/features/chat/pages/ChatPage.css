@@ -54,19 +54,13 @@
 
 .chat-info h1 {
   font-size: 1.3rem;
-  /* Futuristic font matching dashboard */
   font-family: 'Orbitron', sans-serif;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.03em;
   
-  /* White with neon glow */
+  /* Simple clean white text */
   color: #FFFFFF;
-  text-shadow: 
-    0 0 5px rgba(255, 255, 255, 1),
-    0 0 10px rgba(255, 255, 255, 0.8),
-    0 0 20px rgba(0, 229, 255, 0.8),
-    0 0 40px rgba(0, 229, 255, 0.4);
   
   margin: 0;
 }
@@ -671,21 +665,21 @@
 
 .input-form {
   display: flex;
-  gap: var(--spacing-md);
-  max-width: 800px;
+  gap: var(--spacing-sm);
+  max-width: 850px;
   margin: 0 auto;
   align-items: center;
 }
 
-/* Attach button - ChatGPT style with + */
+/* Attach button - Clean white icon on dark circle */
 .attach-button {
-  background: transparent;
-  border: 2px solid #6b7280;
-  color: #9ca3af;
-  font-size: 1.8rem;
-  font-weight: 300;
-  width: 48px;
-  height: 48px;
+  background: #3a3a3a;
+  border: none;
+  color: #ececec;
+  font-size: 1.3rem;
+  font-weight: 600;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -697,9 +691,7 @@
 }
 
 .attach-button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #9ca3af;
-  color: #e5e7eb;
+  background: #4a4a4a;
 }
 
 .attach-button:disabled {
@@ -711,13 +703,14 @@
   flex: 1;
   display: flex;
   gap: var(--spacing-sm);
-  background: linear-gradient(180deg, #2f2f2f 0%, #2a2a2a 100%);
+  background: #2f2f2f;
   border-radius: 28px;
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-md);
   border: 1px solid #3f3f3f;
   align-items: center;
   transition: all 0.2s;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  min-height: 52px;
 }
 
 .input-wrapper:focus-within {
@@ -781,7 +774,72 @@
 }
 
 .send-button:not(:disabled):hover {
-  background: rgba(96, 165, 250, 0.25);
+  background: #93c5fd;
+}
+
+/* Voice button - Clean icon */
+.voice-button {
+  background: #3a3a3a;
+  border: none;
+  color: #ececec;
+  font-size: 1.3rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  position: relative;
+}
+
+.voice-button:hover:not(:disabled) {
+  background: #4a4a4a;
+}
+
+.voice-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Listening state - pulsing red animation */
+.voice-button.listening {
+  background: #ef4444;
+  color: white;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.voice-button.listening::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.2);
+  animation: ripple 1.5s ease-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
 }
 
 .loading-chat {

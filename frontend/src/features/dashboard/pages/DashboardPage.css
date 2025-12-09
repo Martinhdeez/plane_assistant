@@ -1,7 +1,7 @@
 .dashboard-page {
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(180deg, #039be5 0%, #4fc3f7 40%, #b3e5fc 100%);
+  background: linear-gradient(180deg, #0277bd 0%, #039be5 40%, #0288d1 100%);
   background-attachment: fixed;
   position: relative;
   overflow-x: hidden;
@@ -85,36 +85,32 @@
 
 .dashboard-logo h1 {
   font-size: 1.5rem;
-  /* FUTURISTIC STYLES */
   font-family: 'Orbitron', sans-serif !important;
-  font-weight: 800 !important;
-  text-transform: uppercase; /* Futuristic usually means uppercase */
-  letter-spacing: 0.1em; /* Wide spacing for tech look */
+  font-weight: 900 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
   
-  /* PURE WHITE with NEON GLOW */
+  /* WHITE TEXT with STRONG BLACK STROKE */
   color: #FFFFFF !important;
+  -webkit-text-stroke: 2.5px rgba(0, 0, 0, 0.95);
+  -webkit-text-fill-color: #FFFFFF !important;
   
   /* Reset interfering gradients */
   background: none !important;
   -webkit-background-clip: unset !important;
   background-clip: unset !important;
-  -webkit-text-fill-color: initial !important;
   
-  /* Strong Cyan/Blue Neon Glow */
+  /* Subtle cyan glow */
   text-shadow: 
-    0 0 5px rgba(255, 255, 255, 1),
-    0 0 10px rgba(255, 255, 255, 0.8),
-    0 0 20px rgba(0, 229, 255, 0.8), /* Cyan glow */
-    0 0 40px rgba(0, 229, 255, 0.4) !important;
-    
+    0 0 10px rgba(96, 165, 250, 0.8),
+    0 0 20px rgba(96, 165, 250, 0.4);
+  
+  margin: 0;
   filter: none !important;
-  
-  /* Ensure icon matches */
   fill: #FFFFFF !important;
-  
   display: flex !important;
-  flex-direction: row !important; /* STRICT ROW */
-  flex-wrap: nowrap !important; /* NO WRAPPING */
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
   align-items: center !important;
   justify-content: flex-start !important;
   white-space: nowrap !important;
@@ -245,38 +241,49 @@
 .dashboard-title {
   text-align: center;
   margin-bottom: var(--spacing-xl);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2xl);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .dashboard-title h2 {
   font-family: 'Orbitron', sans-serif; /* Futuristic Font */
   font-size: clamp(2rem, 4vw, 2.5rem);
-  color: #FFFFFF; /* Pure White */
+  color: #000000 !important; /* Force black */
   font-weight: 800;
   margin-bottom: var(--spacing-sm);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  
-  /* NEON GLOW MATCHING LOGO */
-  text-shadow: 
-    0 0 5px rgba(255, 255, 255, 1),
-    0 0 10px rgba(255, 255, 255, 0.6),
-    0 0 20px rgba(0, 229, 255, 0.6),
-    0 0 30px rgba(0, 229, 255, 0.4);
+  /* No glow */
+}
+
+
+
+.chats-header h2 {
+  font-size: 1.8rem;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #000000;
+  margin: 0;
 }
 
 .dashboard-title p {
   font-family: 'Orbitron', sans-serif;
-  /* DARK NAVY BLUE for high contrast against light sky/clouds */
-  color: #002147; 
-  font-weight: 600; /* Increased weight for legibility */
+  color: #000000;
+  font-weight: 600;
   font-size: 1.1rem;
   letter-spacing: 0.05em;
-  
-  /* White Halo/Glow to separate text from background */
-  text-shadow: 
-    0 0 10px rgba(255, 255, 255, 0.9),
-    0 0 5px rgba(255, 255, 255, 1);
+  /* No glow */
 }
+
 
 .chats-section {
   max-width: 900px;
@@ -325,8 +332,8 @@
 }
 
 .chat-card {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid var(--border-color);
+  background: #2f2f2f;
+  border: 1px solid #3f3f3f;
   border-radius: var(--radius-md);
   padding: var(--spacing-lg);
   cursor: pointer;
@@ -337,8 +344,8 @@
 
 .chat-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
-  border-color: var(--primary-blue);
+  box-shadow: 0 12px 32px rgba(96, 165, 250, 0.2);
+  border-color: #60a5fa;
 }
 
 .chat-card-header {
@@ -351,7 +358,7 @@
 .chat-title {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--primary-dark);
+  color: #ececec;
   margin: 0;
   flex: 1;
   overflow: hidden;
@@ -361,13 +368,13 @@
 
 .chat-date {
   font-size: 0.8rem;
-  color: var(--text-secondary);
+  color: #9ca3af;
   white-space: nowrap;
   margin-left: var(--spacing-sm);
 }
 
 .chat-preview {
-  color: var(--text-secondary);
+  color: #9ca3af;
   font-size: 0.9rem;
   line-height: 1.5;
   display: -webkit-box;
@@ -382,13 +389,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: var(--spacing-sm);
-  border-top: 1px solid var(--border-color);
+}
+
+.chat-stats {
+  display: flex;
+  gap: var(--spacing-md);
+  font-size: 0.85rem;
+  color: #9ca3af;
 }
 
 .chat-messages-count {
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: #1a1a1a;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
 }
 
 .chat-icon {

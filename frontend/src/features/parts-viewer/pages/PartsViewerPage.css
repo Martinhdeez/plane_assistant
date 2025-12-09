@@ -1,7 +1,7 @@
 .parts-viewer-page {
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(180deg, #039be5 0%, #4fc3f7 40%, #b3e5fc 100%);
+  background: linear-gradient(180deg, #0277bd 0%, #039be5 40%, #0288d1 100%);
   background-attachment: fixed;
   position: relative;
   overflow-x: hidden;
@@ -31,6 +31,15 @@
 .parts-viewer-page .cloud-4 { top: 60%; left: 80%; font-size: 90px; }
 .parts-viewer-page .cloud-5 { top: 75%; left: 15%; font-size: 85px; }
 .parts-viewer-page .cloud-6 { top: 85%; left: 60%; }
+
+.parts-viewer-container {
+  background: #2f2f2f;
+  border: 1px solid #3f3f3f;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  height: 600px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
 
 /* Header */
 .parts-viewer-header {
@@ -81,6 +90,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #FFFFFF;
+  -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.8);
   text-shadow: 
     0 0 5px rgba(255, 255, 255, 1),
     0 0 10px rgba(255, 255, 255, 0.8),

@@ -85,10 +85,7 @@ function DashboardPage() {
 
       <main className="dashboard-content">
         <div className="container">
-          <div className="dashboard-title">
-            <h2>Tus Conversaciones</h2>
-            <p>Gestiona tus consultas de mantenimiento aeronáutico</p>
-          </div>
+
 
           <div className="chats-section">
             <ActionCard

@@ -1,16 +1,30 @@
 .part-card-container {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-md);
+  background: #2f2f2f;
+  border: 1px solid #3f3f3f;
+  border-radius: var(--radius-md);
   padding: var(--spacing-lg);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.part-card-cont.part-card {
+  background: #3a3a3a;
+  border: 1px solid #4a4a4a;
+}
+
+.part-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(96, 165, 250, 0.2);
+  border-color: #60a5fa;
 }
 
 .part-card-container.empty {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 200px;
+  padding: var(--spacing-xl);
+  color: #9ca3af;
+  font-style: italic;
 }
 
 .empty-state {
@@ -18,14 +32,35 @@
   color: var(--text-secondary);
 }
 
+.part-card {
+  background: #3a3a3a;
+  border: 1px solid #4a4a4a;
+  padding: var(--spacing-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.part-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(96, 165, 250, 0.2);
+  border-color: #60a5fa;
+}
+
+.part-card.selected {
+  border-color: #60a5fa;
+  background: #4a4a4a;
+  box-shadow: 0 4px 16px rgba(96, 165, 250, 0.3);
+}
+
 .part-card-title {
   font-family: 'Orbitron', sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
-  color: var(--primary-dark);
+  color: #ececec;
   margin-bottom: var(--spacing-lg);
   padding-bottom: var(--spacing-md);
-  border-bottom: 2px solid var(--border-color);
+  border-bottom: 2px solid #3f3f3f;
 }
 
 .part-details {
@@ -42,19 +77,19 @@
 
 .detail-label {
   font-weight: 700;
-  color: var(--primary-blue);
+  color: #60a5fa;
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .detail-value {
-  color: var(--text-primary);
+  color: #ececec;
   font-size: 1rem;
 }
 
 .detail-description {
-  color: var(--text-secondary);
+  color: #9ca3af;
   line-height: 1.6;
   margin: 0;
 }

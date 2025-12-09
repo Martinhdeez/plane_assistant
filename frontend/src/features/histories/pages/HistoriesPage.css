@@ -1,7 +1,7 @@
 .histories-page {
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(180deg, #039be5 0%, #4fc3f7 40%, #b3e5fc 100%);
+  background: linear-gradient(180deg, #0277bd 0%, #039be5 40%, #0288d1 100%);
   background-attachment: fixed;
   position: relative;
   overflow-x: hidden;
@@ -34,6 +34,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #FFFFFF;
+  -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.8);
   text-shadow: 
     0 0 5px rgba(255, 255, 255, 1),
     0 0 10px rgba(255, 255, 255, 0.8),
@@ -70,8 +71,8 @@
 }
 
 .history-card {
-  background: rgba(255, 255, 255, 0.95);
-  border: 2px solid transparent;
+  background: #2f2f2f;
+  border: 2px solid #3f3f3f;
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
   cursor: pointer;
@@ -81,14 +82,14 @@
 
 .history-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  border-color: var(--primary-blue);
+  box-shadow: 0 8px 24px rgba(96, 165, 250, 0.3);
+  border-color: #60a5fa;
 }
 
 .history-card.selected {
-  border-color: var(--primary-blue);
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0 8px 24px rgba(2, 119, 189, 0.3);
+  border-color: #60a5fa;
+  background: #3a3a3a;
+  box-shadow: 0 8px 24px rgba(96, 165, 250, 0.4);
 }
 
 .history-card-header {
@@ -101,7 +102,7 @@
 .history-card h3 {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--primary-dark);
+  color: #ececec;
   margin: 0;
   flex: 1;
   padding-right: var(--spacing-sm);
@@ -109,12 +110,20 @@
 
 .history-date {
   font-size: 0.75rem;
-  color: var(--text-secondary);
+  color: #9ca3af;
   white-space: nowrap;
 }
 
+.history-card p {
+  color: #ececec !important;
+}
+
+.history-detail p {
+  color: #ececec !important;
+}
+
 .history-summary {
-  color: var(--text-secondary);
+  color: #ececec !important;
   font-size: 0.9rem;
   line-height: 1.5;
   margin: 0;
@@ -147,7 +156,8 @@
 }
 
 .history-detail {
-  background: rgba(255, 255, 255, 0.95);
+  background: #2f2f2f;
+  border: 1px solid #3f3f3f;
   border-radius: var(--radius-lg);
   padding: var(--spacing-2xl);
   max-height: calc(100vh - 200px);
@@ -157,12 +167,12 @@
 .history-detail h2 {
   font-family: 'Orbitron', sans-serif;
   font-size: 1.8rem;
-  color: var(--primary-dark);
+  color: #ececec;
   margin: 0 0 var(--spacing-xs) 0;
 }
 
 .detail-date {
-  color: var(--text-secondary);
+  color: #9ca3af;
   font-size: 0.9rem;
   margin-bottom: var(--spacing-xl);
 }
@@ -170,7 +180,7 @@
 .detail-section {
   margin-bottom: var(--spacing-xl);
   padding-bottom: var(--spacing-lg);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid #3f3f3f;
 }
 
 .detail-section:last-child {
@@ -179,7 +189,7 @@
 
 .detail-section h3 {
   font-size: 1.2rem;
-  color: var(--primary-blue);
+  color: #60a5fa;
   margin: 0 0 var(--spacing-md) 0;
 }
 
@@ -190,8 +200,9 @@
 
 .info-grid div {
   padding: var(--spacing-sm);
-  background: rgba(2, 119, 189, 0.05);
+  background: rgba(96, 165, 250, 0.1);
   border-radius: var(--radius-sm);
+  color: #ececec;
 }
 
 .actions-list, .parts-list {
@@ -202,21 +213,22 @@
 
 .actions-list li, .parts-list li {
   padding: var(--spacing-md);
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(96, 165, 250, 0.05);
   border-radius: var(--radius-sm);
   margin-bottom: var(--spacing-sm);
+  color: #ececec;
 }
 
 .actions-list li p {
   margin: var(--spacing-xs) 0 0 0;
-  color: var(--text-secondary);
+  color: #9ca3af;
   font-size: 0.9rem;
 }
 
 .empty-state {
   text-align: center;
   padding: var(--spacing-2xl);
-  color: var(--text-secondary);
+  color: #9ca3af;
 }
 
 .empty-icon {
