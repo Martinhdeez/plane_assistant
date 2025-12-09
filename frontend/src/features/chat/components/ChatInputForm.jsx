@@ -42,16 +42,8 @@ function ChatInputForm({
         </div>
       )}
       
-      <form className="input-form" onSubmit={handleSubmit}>
-        {/* Hidden file input */}
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={onImageSelect}
-          accept="image/*"
-          style={{ display: 'none' }}
-        />
-        
+      {/* Input form */}
+      <form onSubmit={handleSubmit} className="input-form">
         {/* Image upload button */}
         <button
           type="button"
@@ -60,25 +52,38 @@ function ChatInputForm({
           disabled={sending}
           aria-label="Adjuntar imagen"
         >
-          📎
+          +
         </button>
-        
-        <textarea
-          className="message-input"
-          placeholder="Escribe tu consulta sobre mantenimiento aeronáutico..."
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={sending}
+
+        {/* Hidden file input */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={onImageSelect}
+          accept="image/*"
+          style={{ display: 'none' }}
         />
-        <button 
-          type="submit" 
-          className="send-button"
-          disabled={sending || (!inputMessage.trim() && !selectedImage)}
-          aria-label="Enviar mensaje"
-        >
-          {sending ? '⏳' : '📧'}
-        </button>
+
+        <div className="input-wrapper">
+          <textarea
+            className="message-input"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Escribe un mensaje..."
+            disabled={sending}
+            rows={1}
+          />
+          
+          <button
+            type="submit"
+            className="send-button"
+            disabled={sending || (!inputMessage.trim() && !selectedImage)}
+            aria-label="Enviar mensaje"
+          >
+            ➤
+          </button>
+        </div>
       </form>
     </div>
   );
