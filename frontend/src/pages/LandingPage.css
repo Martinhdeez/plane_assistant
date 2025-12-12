@@ -345,15 +345,15 @@
 
 /* Footer */
 .footer {
-  background: #F8FAFC;
+  background: #1a1a1a;
   padding: 3rem 0;
   text-align: center;
-  border-top: 1px solid #E2E8F0;
+  border-top: 1px solid #3f3f3f;
   width: 100%;
 }
 
 .footer p {
-  color: var(--text-muted);
+  color: #ffffff;
   margin-bottom: 0.5rem;
   font-size: 0.95rem;
   font-weight: 500;
@@ -361,7 +361,7 @@
 
 .footer-disclaimer {
   font-size: 0.85rem;
-  color: #64748B; /* Lighter grey for disclaimer */
+  color: #d1d5db;
   max-width: 800px;
   margin: 1.5rem auto 0;
   line-height: 1.5;

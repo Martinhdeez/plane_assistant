@@ -224,7 +224,8 @@
   
   .viewer-section {
     display: block !important;
-    min-height: 500px;
+    min-height: auto;
+    height: auto;
     width: 100% !important;
     margin-top: 16px !important; /* Moderate top margin */
     margin-bottom: 24px !important;

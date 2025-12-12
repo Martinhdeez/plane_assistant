@@ -76,7 +76,10 @@ function ChatHeader({
         <div className="chat-header-actions">
           <button 
             className="generate-history-button"
-            onClick={onGenerateHistory}
+            onClick={() => {
+              console.log('🖱️ History button clicked');
+              onGenerateHistory();
+            }}
             disabled={generatingHistory}
             aria-label="Generar Histórico"
             title="Generar histórico de mantenimiento"

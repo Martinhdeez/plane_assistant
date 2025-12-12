@@ -205,8 +205,12 @@ function ChatPage() {
   };
 
   const handleGenerateHistory = async () => {
-    if (messages.length < 4) {
-      setError('El chat debe tener al menos 4 mensajes para generar un histórico');
+    console.log('🔍 handleGenerateHistory called');
+    console.log('Messages count:', messages.length);
+    
+    if (messages.length < 2) {
+      alert('⚠️ El chat debe tener al menos 1 intercambio (2 mensajes) para generar un histórico.\n\nMensajes actuales: ' + messages.length + '\nMensajes necesarios: 2');
+      console.log('❌ Not enough messages');
       return;
     }
 
@@ -214,17 +218,20 @@ function ChatPage() {
       '¿Generar histórico de mantenimiento de esta conversación? La IA creará un resumen con las acciones realizadas.'
     );
     
+    console.log('User confirmed:', confirmed);
     if (!confirmed) return;
 
     try {
       setGeneratingHistory(true);
       setError('');
+      console.log('📡 Calling generateHistory API with chatId:', chatId);
       const result = await generateHistory(chatId);
+      console.log('✅ History generated successfully:', result);
       alert(`Histórico generado exitosamente. Puedes verlo en la sección de Históricos.`);
     } catch (err) {
       const errorMsg = err.response?.data?.detail || 'Error al generar el histórico';
       setError(errorMsg);
-      console.error('Error generating history:', err);
+      console.error('❌ Error generating history:', err);
     } finally {
       setGeneratingHistory(false);
     }

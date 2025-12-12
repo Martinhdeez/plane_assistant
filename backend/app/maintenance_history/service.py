@@ -37,8 +37,8 @@ async def generate_history_from_chat(
     )
     messages = messages_result.scalars().all()
     
-    if len(messages) < 4:
-        raise ValueError("El chat debe tener al menos 4 mensajes para generar un histórico")
+    if len(messages) < 2:
+        raise ValueError("El chat debe tener al menos 1 intercambio (2 mensajes) para generar un histórico")
     
     # Build conversation text
     conversation = "\n\n".join([

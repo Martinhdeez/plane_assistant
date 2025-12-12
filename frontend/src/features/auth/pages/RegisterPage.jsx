@@ -49,12 +49,23 @@ function RegisterPage() {
         }
         return null;
       }
+    },
+    {
+      name: 'role',
+      type: 'select',
+      label: 'Tipo de usuario',
+      required: true,
+      options: [
+        { value: 'mantenimiento', label: 'Mantenimiento - Puedo crear chats y generar históricos' },
+        { value: 'oficinista', label: 'Oficinista - Solo visualizar históricos asignados' }
+      ],
+      defaultValue: 'mantenimiento'
     }
   ];
 
   const handleRegister = async (formData) => {
-    // Register the user
-    await register(formData.username, formData.email, formData.password);
+    // Register the user with role
+    await register(formData.username, formData.email, formData.password, formData.role);
     
     // Redirect to login with success message
     navigate('/login', { 

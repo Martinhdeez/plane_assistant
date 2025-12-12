@@ -1,5 +1,6 @@
 .viewer3d-container {
   width: 100%;
+  min-height: 600px;
   height: 100%;
   position: relative;
   background: #2f2f2f;
@@ -10,16 +11,25 @@
 }
 
 /* Mobile adjustments */
+@media (max-width: 1100px) {
+  .viewer3d-container {
+    height: 70vh;
+    min-height: 500px;
+  }
+}
+
 @media (max-width: 480px) {
   .viewer3d-container {
-    height: 450px;
+    height: 60vh;
+    min-height: 450px;
     border-radius: 0;
   }
 }
 
 @media (max-width: 360px) {
   .viewer3d-container {
-    height: 400px;
+    height: 55vh;
+    min-height: 400px;
   }
 }
 
@@ -132,10 +142,6 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .viewer3d-container {
-    height: 400px;
-  }
-  
   .viewer3d-controls {
     bottom: 10px;
     right: 10px;

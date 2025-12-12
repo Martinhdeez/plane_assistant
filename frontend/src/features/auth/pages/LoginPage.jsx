@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import AuthForm from '../components/AuthForm';
 import { login, isAuthenticated } from '../services/authService';
+import { getCurrentUser } from '../../profile/services/userService';
 import TopBar from '../../shared/components/TopBar';
 import './LoginPage.css';
 
@@ -44,8 +45,23 @@ function LoginPage() {
 
   const handleLogin = async (formData) => {
     await login(formData.email, formData.password);
-    // Redirect to dashboard after successful login
-    navigate('/dashboard');
+    
+    // Get user info to determine redirect based on role
+    try {
+      const user = await getCurrentUser();
+      
+      // Redirect based on role
+      if (user.role === 'oficinista') {
+        navigate('/histories');
+      } else if (user.role === 'administrador') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      // Fallback to dashboard if can't get user info
+      navigate('/dashboard');
+    }
   };
 
   return (

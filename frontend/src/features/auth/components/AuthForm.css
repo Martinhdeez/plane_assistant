@@ -1,77 +1,105 @@
 .auth-form {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(26, 26, 26, 0.95);
+  border: 2px solid #3f3f3f;
   border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  padding: var(--spacing-2xl);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(10px);
   width: 100%;
-  max-width: 450px;
+  max-width: 650px;
   margin: 0 auto;
 }
 
 .auth-form h2 {
+  font-family: 'Orbitron', sans-serif;
   font-size: clamp(1.8rem, 3vw, 2.2rem);
-  color: var(--primary-dark);
+  color: #60a5fa;
   margin-bottom: var(--spacing-sm);
   font-weight: 800;
   text-align: center;
+  text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
 }
 
 .auth-form p {
-  color: var(--text-secondary);
+  color: #9ca3af;
   text-align: center;
   margin-bottom: var(--spacing-lg);
   font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .form-group {
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
 }
 
 .form-group label {
   display: block;
-  color: var(--primary-dark);
+  color: #ececec;
   font-weight: 600;
-  margin-bottom: var(--spacing-xs);
-  font-size: 0.9rem;
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.95rem;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 0.875rem 1rem;
-  border: 2px solid var(--border-color);
-  border-radius: var(--radius-sm);
+  border: 2px solid #3f3f3f;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-family: inherit;
-  transition: all var(--transition-normal);
-  background: white;
+  transition: all 0.3s ease;
+  background: #2f2f2f;
+  color: #ececec;
 }
 
-.form-group input:focus {
+.form-group select {
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  line-height: 1.6;
+}
+
+.form-group input::placeholder {
+  color: #6b7280;
+}
+
+.form-group input:focus,
+.form-group select:focus {
   outline: none;
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgba(2, 119, 189, 0.1);
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+  background: #1a1a1a;
 }
 
-.form-group input.error {
+.form-group input.error,
+.form-group select.error {
   border-color: #ef4444;
 }
 
+.form-group select {
+  cursor: pointer;
+}
+
+.form-group select option {
+  background: #2f2f2f;
+  color: #ececec;
+  padding: var(--spacing-sm);
+}
+
 .error-message {
-  color: #ef4444;
+  color: #fca5a5;
   font-size: 0.85rem;
-  margin-top: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
   display: block;
 }
 
 .form-error {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #dc2626;
-  padding: var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  margin-bottom: var(--spacing-md);
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
   font-size: 0.9rem;
   text-align: center;
 }
@@ -79,21 +107,21 @@
 .submit-button {
   width: 100%;
   padding: 1rem;
-  background: var(--primary-blue);
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
   color: white;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: all 0.3s ease;
   margin-top: var(--spacing-md);
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
 }
 
 .submit-button:hover:not(:disabled) {
-  background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(2, 119, 189, 0.3);
+  box-shadow: 0 6px 20px rgba(96, 165, 250, 0.4);
 }
 
 .submit-button:disabled {
@@ -103,25 +131,36 @@
 
 .form-footer {
   text-align: center;
-  margin-top: var(--spacing-lg);
-  padding-top: var(--spacing-md);
-  border-top: 1px solid var(--border-color);
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid #3f3f3f;
 }
 
 .form-footer p {
-  color: var(--text-secondary);
+  color: #9ca3af;
   font-size: 0.9rem;
   margin-bottom: 0;
 }
 
 .form-footer a {
-  color: var(--primary-blue);
+  color: #60a5fa;
   text-decoration: none;
   font-weight: 600;
-  transition: color var(--transition-fast);
+  transition: color 0.2s ease;
 }
 
 .form-footer a:hover {
-  color: var(--primary-dark);
+  color: #93c5fd;
   text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .auth-form {
+    padding: var(--spacing-xl);
+  }
+
+  .auth-form h2 {
+    font-size: 1.6rem;
+  }
 }

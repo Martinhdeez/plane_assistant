@@ -12,7 +12,10 @@ function AuthForm({
   footerLinkText 
 }) {
   const [formData, setFormData] = useState(
-    fields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {})
+    fields.reduce((acc, field) => ({ 
+      ...acc, 
+      [field.name]: field.defaultValue || '' 
+    }), {})
   );
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
@@ -102,16 +105,33 @@ function AuthForm({
       {fields.map(field => (
         <div key={field.name} className="form-group">
           <label htmlFor={field.name}>{field.label}</label>
-          <input
-            type={field.type}
-            id={field.name}
-            name={field.name}
-            value={formData[field.name]}
-            onChange={handleChange}
-            placeholder={field.placeholder}
-            className={errors[field.name] ? 'error' : ''}
-            disabled={isLoading}
-          />
+          {field.type === 'select' ? (
+            <select
+              id={field.name}
+              name={field.name}
+              value={formData[field.name]}
+              onChange={handleChange}
+              className={errors[field.name] ? 'error' : ''}
+              disabled={isLoading}
+            >
+              {field.options.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type={field.type}
+              id={field.name}
+              name={field.name}
+              value={formData[field.name]}
+              onChange={handleChange}
+              placeholder={field.placeholder}
+              className={errors[field.name] ? 'error' : ''}
+              disabled={isLoading}
+            />
+          )}
           {errors[field.name] && (
             <span className="error-message">{errors[field.name]}</span>
           )}

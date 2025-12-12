@@ -22,21 +22,37 @@ function TopBar({ user, showAuth = true }) {
           <div className="top-bar-user">
             {user ? (
               <>
-                <Link to="/dashboard" className="top-bar-nav-link">
-                  💬 Chats
-                </Link>
+                {/* Admin Panel - Only for administrators */}
+                {user.role === 'administrador' && (
+                  <Link to="/admin" className="top-bar-nav-link">
+                    ⚙️ Admin
+                  </Link>
+                )}
+
+                {/* Chats - Only for mantenimiento and admin */}
+                {(user.role === 'mantenimiento' || user.role === 'administrador') && (
+                  <Link to="/dashboard" className="top-bar-nav-link">
+                    💬 Chats
+                  </Link>
+                )}
+
+                {/* 3D Viewer - All roles can access */}
                 <Link to="/parts-viewer" className="top-bar-nav-link">
                   🔧 Visor 3D
                 </Link>
+
+                {/* Histories - All roles can access */}
                 <Link to="/histories" className="top-bar-nav-link">
                   📋 Históricos
                 </Link>
+
+                {/* Profile Avatar */}
                 <Link to="/profile" className="user-info-link">
                   <div className="user-avatar">
                     {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
                   </div>
-                  <span className="user-name">{user.username || 'Usuario'}</span>
                 </Link>
+
                 <button className="btn-logout-topbar" onClick={handleLogout}>
                   Cerrar Sesión
                 </button>

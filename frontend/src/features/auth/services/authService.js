@@ -33,15 +33,16 @@ export async function login(email, password) {
  * @param {string} username 
  * @param {string} email 
  * @param {string} password 
+ * @param {string} role - User role (mantenimiento, oficinista)
  * @returns {Promise<{id: number, username: string, email: string}>}
  */
-export async function register(username, email, password) {
+export async function register(username, email, password, role = 'mantenimiento') {
     const response = await fetch(`${API_BASE_URL}/users/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, email, password, role }),
     });
 
     if (!response.ok) {
