@@ -1,1 +1,30 @@
 /* ChatHeader uses styles from ChatPage.css */
+
+.chat-context-header {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.context-badge-header {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.context-badge-header.model {
+  background: rgba(102, 126, 234, 0.2);
+  color: #a5b4fc;
+  border: 1px solid rgba(102, 126, 234, 0.4);
+}
+
+.context-badge-header.component {
+  background: rgba(118, 75, 162, 0.2);
+  color: #c4b5fd;
+  border: 1px solid rgba(118, 75, 162, 0.4);
+}

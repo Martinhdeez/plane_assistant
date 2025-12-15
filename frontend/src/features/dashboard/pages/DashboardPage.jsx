@@ -8,6 +8,7 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import TopBar from '../../shared/components/TopBar';
 import ChatCard from '../components/ChatCard';
 import ActionCard from '../components/ActionCard';
+import NewChatModal from '../components/NewChatModal';
 import './DashboardPage.css';
 
 function DashboardPage() {
@@ -16,6 +17,7 @@ function DashboardPage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -48,9 +50,13 @@ function DashboardPage() {
     navigate('/');
   };
 
-  const handleCreateChat = async () => {
+  const handleCreateChat = async (chatData) => {
     try {
-      const newChat = await createChat('Nueva Conversación');
+      const newChat = await createChat(
+        chatData.title,
+        chatData.airplane_model,
+        chatData.component_type
+      );
       navigate(`/chat/${newChat.id}`);
     } catch (err) {
       setError('Error al crear la conversación');
@@ -92,7 +98,7 @@ function DashboardPage() {
               icon="➕"
               title="Nueva Conversación"
               description="Inicia una nueva consulta con tu asistente de mantenimiento"
-              onClick={handleCreateChat}
+              onClick={() => setIsModalOpen(true)}
             />
 
             {error && (
@@ -121,6 +127,12 @@ function DashboardPage() {
           </div>
         </div>
       </main>
+
+      <NewChatModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCreate={handleCreateChat}
+      />
     </div>
   );
 }

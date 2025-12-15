@@ -22,7 +22,9 @@ async def create_chat(
     """Create a new chat for the current user."""
     new_chat = Chat(
         user_id=current_user.id,
-        title=chat_data.title
+        title=chat_data.title,
+        airplane_model=chat_data.airplane_model,
+        component_type=chat_data.component_type
     )
     db.add(new_chat)
     await db.commit()
@@ -32,6 +34,8 @@ async def create_chat(
         id=new_chat.id,
         user_id=new_chat.user_id,
         title=new_chat.title,
+        airplane_model=new_chat.airplane_model,
+        component_type=new_chat.component_type,
         created_at=new_chat.created_at,
         message_count=0
     )
@@ -58,6 +62,8 @@ async def list_chats(
             id=chat.id,
             user_id=chat.user_id,
             title=chat.title,
+            airplane_model=chat.airplane_model,
+            component_type=chat.component_type,
             created_at=chat.created_at,
             message_count=message_count
         )
@@ -116,6 +122,8 @@ async def get_chat(
         id=chat.id,
         user_id=chat.user_id,
         title=chat.title,
+        airplane_model=chat.airplane_model,
+        component_type=chat.component_type,
         created_at=chat.created_at,
         messages=message_responses
     )
@@ -154,6 +162,8 @@ async def update_chat(
         id=chat.id,
         user_id=chat.user_id,
         title=chat.title,
+        airplane_model=chat.airplane_model,
+        component_type=chat.component_type,
         created_at=chat.created_at,
         message_count=message_count
     )
@@ -242,13 +252,20 @@ async def send_message(
     await db.refresh(user_message)
     
     # Get AI response
+    # Prepare chat context
+    chat_context = {
+        "airplane_model": chat.airplane_model,
+        "component_type": chat.component_type
+    }
+    
     try:
         if user_image_info:
             # Process with Gemini Vision
             ai_response = await gemini_service.chat_with_image(
                 user_message=content,
                 image_path=user_image_info["path"],
-                message_history=message_history
+                message_history=message_history,
+                chat_context=chat_context
             )
             
             # Draw annotations on image
@@ -272,7 +289,8 @@ async def send_message(
             # Regular text chat
             ai_response_content = await gemini_service.chat(
                 user_message=content,
-                message_history=message_history
+                message_history=message_history,
+                chat_context=chat_context
             )
             ai_image_info = None
             

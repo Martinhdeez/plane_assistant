@@ -37,7 +37,7 @@ class GeminiService:
         # Configure Gemini for vision
         genai.configure(api_key=settings.GOOGLE_API_KEY)
     
-    async def chat(self, user_message: str, message_history: list[dict] = None) -> str:
+    async def chat(self, user_message: str, message_history: list[dict] = None, chat_context: dict = None) -> str:
         """
         Send a message to Gemini and get a response.
         
@@ -45,11 +45,21 @@ class GeminiService:
             user_message: The user's question or message
             message_history: Optional list of previous messages for context
                             Format: [{"role": "user"|"assistant", "content": "..."}]
+            chat_context: Optional dict with airplane_model and component_type
             
         Returns:
             The AI assistant's response
         """
-        messages = [SystemMessage(content=SYSTEM_PROMPT)]
+        # Build system prompt with context
+        system_prompt = SYSTEM_PROMPT
+        if chat_context:
+            context_addition = f"\n\nCONTEXTO DE ESTA CONVERSACIÓN:\n"
+            context_addition += f"- Modelo de avión: {chat_context.get('airplane_model', 'No especificado')}\n"
+            context_addition += f"- Componente/Sistema: {chat_context.get('component_type', 'No especificado')}\n"
+            context_addition += "\nEnfoca tus respuestas específicamente en este modelo de avión y este sistema/componente."
+            system_prompt += context_addition
+        
+        messages = [SystemMessage(content=system_prompt)]
         
         # Add message history if provided
         if message_history:
@@ -69,7 +79,8 @@ class GeminiService:
         self,
         user_message: str,
         image_path: str,
-        message_history: list[dict] = None
+        message_history: list[dict] = None,
+        chat_context: dict = None
     ) -> dict:
         """
         Process a message with an image using Gemini Vision.
@@ -78,6 +89,7 @@ class GeminiService:
             user_message: The user's question about the image
             image_path: Path to the image file
             message_history: Optional previous messages for context
+            chat_context: Optional dict with airplane_model and component_type
             
         Returns:
             dict with:
@@ -98,9 +110,15 @@ class GeminiService:
                 role = "Usuario" if msg["role"] == "user" else "Asistente"
                 context += f"{role}: {msg['content']}\n"
         
+        # Build context-aware prompt
+        context_info = ""
+        if chat_context:
+            context_info = f"\nModelo de avión: {chat_context.get('airplane_model', 'No especificado')}\n"
+            context_info += f"Sistema/Componente: {chat_context.get('component_type', 'No especificado')}\n"
+        
         # Structured prompt for annotations - SIMPLIFIED for JSON mode
         prompt = f"""Analiza esta imagen de un motor de avión y responde a: {user_message}
-
+{context_info}
 Identifica 5-6 componentes principales del motor.
 
 REGLAS para círculos:

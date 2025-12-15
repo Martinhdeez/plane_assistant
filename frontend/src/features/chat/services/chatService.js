@@ -21,12 +21,14 @@ export async function getChats() {
 /**
  * Create a new chat
  * @param {string} title - Chat title
+ * @param {string} airplane_model - Airplane model
+ * @param {string} component_type - Component type
  * @returns {Promise<Object>}
  */
-export async function createChat(title) {
+export async function createChat(title, airplane_model, component_type) {
     const response = await authenticatedFetch(getApiUrl('/chats/'), {
         method: 'POST',
-        body: JSON.stringify({ title }),
+        body: JSON.stringify({ title, airplane_model, component_type }),
     });
 
     if (!response.ok) {
