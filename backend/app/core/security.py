@@ -4,10 +4,10 @@ from jose import jwt
 from passlib.context import CryptContext
 import os
 from dotenv import load_dotenv
+from app.core.config import settings
 
 load_dotenv()
 
-SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 10080  # 7 days
 
@@ -27,5 +27,5 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     else:
         expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET, algorithm=ALGORITHM)
     return encoded_jwt

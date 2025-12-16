@@ -1,0 +1,40 @@
+services:
+  postgresdb:
+    container_name: postgresql
+    image: plane_assistant/postgres
+    restart: unless-stopped
+    volumes: 
+      - "db:/var/lib/postgresql/data"
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "docker"
+      POSTGRES_PASSWORD: "secret"
+      POSTGRES_DB: "plane_assistant"
+  backend:
+    container_name: fastapi
+    image: plane_assistant/fastapi
+    restart: unless-stopped
+    volumes:
+      - "./config:/config"
+      - "./uploads:/uploads"
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+  frontend:
+    container_name: npm
+    image: plane_assistant/npm
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+
+volumes:
+  db:

@@ -4,8 +4,9 @@ import shutil
 from pathlib import Path
 from datetime import datetime
 from fastapi import UploadFile, HTTPException
+from app.core.config import settings
 
-UPLOAD_DIR = Path("uploads/users")
+UPLOAD_DIR = Path(settings.AI_IMG_PATH)
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
 

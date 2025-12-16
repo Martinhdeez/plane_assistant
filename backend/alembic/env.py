@@ -10,6 +10,7 @@ from alembic import context
 import os
 from dotenv import load_dotenv
 from app.core.database import Base
+from app.core.config import settings
 from app.user.user import User  # Import models to register them
 from app.assistant.chat.chat import Chat
 from app.assistant.message.message import Message
@@ -21,7 +22,7 @@ load_dotenv()
 config = context.config
 
 # Set sqlalchemy.url from env var
-config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

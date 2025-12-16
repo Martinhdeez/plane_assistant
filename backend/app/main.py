@@ -50,7 +50,7 @@ async def serve_image(
     file_path = Path(path)
     
     # Security: ensure path is within uploads directory
-    if not str(file_path).startswith("uploads/users/"):
+    if not str(file_path).startswith(settings.AI_IMG_PATH):
         raise HTTPException(status_code=403, detail="Access denied")
     
     # Verify file exists
