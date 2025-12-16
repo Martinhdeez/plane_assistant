@@ -1,24 +1,23 @@
-FROM python:3.13-alpine
+FROM python:3.13.11-alpine
 
 WORKDIR /build
 
 COPY ./backend/requirements.txt .
 
+RUN apk add --no-cache gcc clang
 RUN pip install -r requirements.txt
 
+RUN apk add --no-cache curl jq
 COPY ./backend/.env_example .
-COPY ./backend/create_admin.sh .
-RUN chmod +x ./create_admin.sh
 
 WORKDIR /app
 
-COPY --exclude=./backend/uploads \
-    --exclude=./backend/.gitignore \
-    --exclude=./backend/create_admin.sh \
-    --exclude=./backend/requirements.txt \
-    --exclude=./backend/.env_example \
-    --exclude=./backend/.venv \
-    ./backend/* .
+COPY --exclude=uploads \
+    --exclude=.gitignore \
+    --exclude=requirements.txt \
+    --exclude=.env_example \
+    --exclude=.venv \
+    ./backend/ .
 
 COPY ./docker/fastapi/entrypoint.sh .
 RUN chmod +x ./entrypoint.sh
@@ -30,6 +29,8 @@ EXPOSE 8000/tcp
 
 VOLUME ["/uploads"]
 VOLUME ["/config"]
+
+ENV ENV_FILE=/config/.env
 
 ENTRYPOINT ["/app/entrypoint.sh", "uvicorn"]
 CMD ["app.main:app", "--reload"]

@@ -9,7 +9,7 @@ RUN npm install
 
 WORKDIR /app
 
-COPY ./frontend/* .
+COPY ./frontend/ .
 
 EXPOSE 5173/tcp
 

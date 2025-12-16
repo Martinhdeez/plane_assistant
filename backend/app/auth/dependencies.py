@@ -6,7 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.core.database import get_db
-from app.core.security import SECRET_KEY, ALGORITHM
+from app.core.security import ALGORITHM
+from app.core.config import settings
 from app.auth.schemas import TokenData
 from app.user.user import User
 from app.user.schemas import UserRole
@@ -20,7 +21,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: An
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[ALGORITHM])
         user_id: str = payload.get("sub")
         if user_id is None:
             raise credentials_exception

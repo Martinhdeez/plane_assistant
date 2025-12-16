@@ -53,3 +53,7 @@ frontend/build/
 # Logs
 *.log
 logs/
+
+# Docker
+docker/config
+docker/uploads

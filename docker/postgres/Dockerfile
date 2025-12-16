@@ -3,7 +3,7 @@ FROM postgres:18-trixie
 RUN apt-get update &&\
     apt-get install -y postgresql-18-pgvector
 
-RUN echo "shared_preload_libraries='pg_vector'" >> /usr/share/postgresql/postgresql.conf.sample
+COPY ./docker/postgres/init.sql /docker-entrypoint-initdb.db/init.sql
 
-HEALTHCHECK --interval=5s --timeout=3s --retries=3 \
+HEALTHCHECK --interval=10s --timeout=3s --retries=5 \
     CMD pg_isready -U postgres || exit 1
