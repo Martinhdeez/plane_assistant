@@ -5,11 +5,10 @@ services:
     restart: unless-stopped
     volumes: 
       - "postgres_data:/var/lib/postgresql"
-      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     environment:
-      POSTGRES_USER: "docker"
+      POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "secret"
       POSTGRES_DB: "plane_assistant"
   backend:
@@ -20,7 +19,7 @@ services:
       - "./config:/config"
       - "./uploads:/uploads"
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     depends_on:
       postgresdb:
         condition: service_healthy
@@ -29,7 +28,7 @@ services:
     image: plane_assistant/npm
     restart: unless-stopped
     ports:
-      - "5173:5173"
+      - "127.0.0.1:5173:5173"
     depends_on:
       postgresdb:
         condition: service_healthy

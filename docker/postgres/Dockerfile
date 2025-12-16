@@ -5,5 +5,5 @@ RUN apt-get update &&\
 
 COPY ./docker/postgres/init.sql /docker-entrypoint-initdb.db/init.sql
 
-HEALTHCHECK --interval=10s --timeout=3s --retries=5 \
+HEALTHCHECK --interval=5s --timeout=3s --retries=5 \
     CMD pg_isready -U postgres || exit 1
