@@ -6,8 +6,11 @@ from datetime import datetime
 from fastapi import UploadFile, HTTPException
 
 UPLOAD_DIR = Path("uploads/users")
+TEMPLATE_DIR = Path("uploads/templates")
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
+ALLOWED_TEMPLATE_EXTENSIONS = {".pdf"}
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
+MAX_TEMPLATE_SIZE = 25 * 1024 * 1024  # 25MB
 
 class StorageService:
     @staticmethod
@@ -128,6 +131,52 @@ class StorageService:
                     )
                 })
         return images
+    
+    @staticmethod
+    async def save_instruction_template(
+        user_id: int,
+        file: UploadFile
+    ) -> dict:
+        """Save instruction template PDF"""
+        # Validate extension
+        ext = Path(file.filename).suffix.lower()
+        if ext not in ALLOWED_TEMPLATE_EXTENSIONS:
+            raise HTTPException(
+                status_code=400,
+                detail=f"File type not allowed. Only PDF files are supported."
+            )
+        
+        # Create directory if not exists
+        template_dir = TEMPLATE_DIR / f"user_{user_id}"
+        template_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Generate unique filename
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        unique_id = str(uuid.uuid4())[:8]
+        filename = f"template_{timestamp}_{unique_id}{ext}"
+        file_path = template_dir / filename
+        
+        # Read and validate size
+        content = await file.read()
+        if len(content) > MAX_TEMPLATE_SIZE:
+            raise HTTPException(
+                status_code=400,
+                detail=f"File too large. Maximum size: {MAX_TEMPLATE_SIZE / 1024 / 1024}MB"
+            )
+        
+        # Save file
+        with open(file_path, "wb") as f:
+            f.write(content)
+        
+        # Get absolute path and then relative to cwd
+        abs_path = file_path.resolve()
+        
+        return {
+            "path": str(abs_path.relative_to(Path.cwd())),
+            "filename": file.filename,
+            "size": len(content),
+            "type": file.content_type
+        }
 
 # Singleton instance
 storage_service = StorageService()

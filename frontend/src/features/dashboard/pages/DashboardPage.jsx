@@ -55,7 +55,8 @@ function DashboardPage() {
       const newChat = await createChat(
         chatData.title,
         chatData.airplane_model,
-        chatData.component_type
+        chatData.component_type,
+        chatData.template
       );
       navigate(`/chat/${newChat.id}`);
     } catch (err) {
