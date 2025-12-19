@@ -29,7 +29,7 @@ services:
     image: plane_assistant/web:latest
     restart: unless-stopped
     environment:
-      VITE_API_URL: 'http://localhost:2000' # Change to your API URL
+      REAL_API_URL: 'http://localhost:8000' # Change to your API URL
     ports:
       - "8080:80"
     depends_on:

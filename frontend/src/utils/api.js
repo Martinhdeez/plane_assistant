@@ -2,7 +2,7 @@
  * API utility with automatic token expiration handling
  */
 
-const API_BASE_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api`;
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api`;
 
 /**
  * Handle 401 Unauthorized responses by logging out user
