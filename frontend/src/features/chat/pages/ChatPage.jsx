@@ -68,7 +68,7 @@ function ChatPage() {
         try {
           const imageUrl = message.image_url.startsWith('http') 
             ? message.image_url
-            : `http://localhost:8000${message.image_url}`;
+            : `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${message.image_url}`;
           
           const response = await fetch(imageUrl, {
             headers: { 'Authorization': `Bearer ${token}` }
