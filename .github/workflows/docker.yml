@@ -37,6 +37,9 @@ jobs:
     steps:
     - name: Setup repository
       uses: actions/checkout@v5
+      with:
+        repository: Martinhdeez/plane_assistant
+        ssh-key: ${{ secrets.DATATHON }}
     - name: Registry login
       uses: docker/login-action@v3
       with:
