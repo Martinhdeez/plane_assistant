@@ -11,7 +11,7 @@ function build_image() {
 
     echo "Building ${IMAGE_NAME}..."
 
-    # If IS_DEV is different than PATH_NAME it means it has "-dev"
+    # If IS_DEV is different than IMAGE_NAME it means it has "-dev"
     if [[ $IS_DEV == $IMAGE_NAME ]]; then
         docker build -t plane_assistant/$IMAGE_NAME -f ./docker/$IMAGE_NAME/Dockerfile .
     else
