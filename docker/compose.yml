@@ -18,14 +18,14 @@ services:
       - "./config:/config"
       - "./uploads:/uploads"
     environment:
-      WEB_CONCURRENCY: 4 # Number of workers (child processes)
+      WEB_CONCURRENCY: 1 # Number of workers (child processes)
     ports:
       - "8000:8000"
     depends_on:
       postgresdb:
         condition: service_healthy
   frontend:
-    container_name: pa-vite
+    container_name: pa-website
     image: plane_assistant/web:latest
     restart: unless-stopped
     ports:

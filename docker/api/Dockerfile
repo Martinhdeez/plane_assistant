@@ -2,23 +2,26 @@ FROM python:3.13.11-slim AS builder
 
 WORKDIR /build
 
-RUN python -m venv /build/venv
-ENV PATH="/build/venv/bin:$PATH"
+RUN apt update &&\
+    apt install clang -y
 
-RUN apt update
-RUN apt install clang -y
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 COPY ./backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-FROM python:3.13.11-alpine AS runner
+FROM python:3.13.11-slim AS runner
 
 WORKDIR /build
 
-RUN apk add --no-cache curl jq
 COPY ./backend/.env_example .
 
 WORKDIR /app
+
+RUN apt update &&\
+    apt install curl jq -y &&\
+    rm -rf /var/lib/apt/lists/*
 
 COPY --exclude=uploads \
     --exclude=.gitignore \
@@ -38,8 +41,8 @@ EXPOSE 8000/tcp
 VOLUME ["/uploads"]
 VOLUME ["/config"]
 
-ENV PATH="/app/venv/bin:$PATH"
-COPY --from=builder /build/venv /app/venv
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 ENV ENV_FILE=/config/.env
 ENV UVICORN_HOST=0.0.0.0

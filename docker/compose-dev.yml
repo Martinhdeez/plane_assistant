@@ -1,10 +1,10 @@
 services:
   postgresdb:
-    container_name: pa-postgres
-    image: plane_assistant/db:dev
+    container_name: pa-postgres-dev
+    image: plane_assistant/db:latest
     restart: unless-stopped
     volumes: 
-      - "postgres_data:/var/lib/postgresql"
+      - "postgres_dev_data:/var/lib/postgresql"
     ports:
       - "127.0.0.1:5432:5432"
     environment:
@@ -12,7 +12,7 @@ services:
       POSTGRES_PASSWORD: "secret"
       POSTGRES_DB: "plane_assistant"
   backend:
-    container_name: pa-fastapi
+    container_name: pa-fastapi-dev
     image: plane_assistant/api:dev
     restart: unless-stopped
     volumes:
@@ -24,7 +24,7 @@ services:
       postgresdb:
         condition: service_healthy
   frontend:
-    container_name: pa-vite
+    container_name: pa-website-dev
     image: plane_assistant/web:dev
     restart: unless-stopped
     ports:
@@ -36,4 +36,4 @@ services:
         condition: service_healthy
 
 volumes:
-  postgres_data:
+  postgres_dev_data:

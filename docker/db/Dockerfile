@@ -1,7 +1,8 @@
 FROM postgres:18-trixie
 
 RUN apt-get update &&\
-    apt-get install -y postgresql-18-pgvector
+    apt-get install -y postgresql-18-pgvector &&\
+    rm -rf /var/lib/apt/lists/*
 
 COPY ./docker/db/init.sql /docker-entrypoint-initdb.db/init.sql
 
