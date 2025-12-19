@@ -14,7 +14,8 @@ class Settings(BaseSettings):
     GEMINI_MODEL: str = "gemini-2.0-flash-exp"
     
     # Photo uploads
-    AI_IMG_PATH: str = "uploads/users"
+    UPLOAD_PATH: str = "uploads/users"
+    TEMPLATE_PATH: str = "uploads/templates"
 
     # Database
     DATABASE_URL: str = "postgres+asyncpg://username:password@hostname:port/database-name"

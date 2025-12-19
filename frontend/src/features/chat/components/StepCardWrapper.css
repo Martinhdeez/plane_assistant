@@ -1,0 +1,15 @@
+/* Step card wrapper - fixed position like header */
+.step-card-wrapper {
+  position: fixed;
+  top: 60px; /* Below header */
+  left: 0;
+  right: 0;
+  z-index: 150;
+  background: transparent;
+  padding: 0 20px;
+  pointer-events: none;
+}
+
+.step-card-wrapper > * {
+  pointer-events: auto;
+}

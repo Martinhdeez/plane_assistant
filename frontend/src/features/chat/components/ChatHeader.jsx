@@ -67,10 +67,18 @@ function ChatHeader({
               />
             </div>
           ) : (
-            <h1 onClick={onEditTitle} className="chat-title-editable">
-              {chat?.title || 'Conversación'}
-              <span className="edit-icon">✏️</span>
-            </h1>
+            <>
+              <h1 onClick={onEditTitle} className="chat-title-editable">
+                {chat?.title || 'Conversación'}
+                <span className="edit-icon">✏️</span>
+              </h1>
+              {chat && (
+                <div className="chat-context-header">
+                  <span className="context-badge-header model">✈️ {chat.airplane_model}</span>
+                  <span className="context-badge-header component">🔧 {chat.component_type}</span>
+                </div>
+              )}
+            </>
           )}
         </div>
         <div className="chat-header-actions">

@@ -37,47 +37,69 @@ class GeminiService:
         # Configure Gemini for vision
         genai.configure(api_key=settings.GOOGLE_API_KEY)
     
-    async def chat(self, user_message: str, message_history: list[dict] = None) -> str:
+    async def chat(self, message: str, history: list[dict], chat_context: dict | None = None) -> str:
         """
-        Send a message to Gemini and get a response.
-        
+        Send a message to Gemini and get a response
         Args:
-            user_message: The user's question or message
-            message_history: Optional list of previous messages for context
-                            Format: [{"role": "user"|"assistant", "content": "..."}]
-            
-        Returns:
-            The AI assistant's response
+            message: User's message
+            history: List of previous messages [{"role": "user", "content": "..."}, ...]
+            chat_context: Optional context with airplane_model, component_type, and current_step
         """
-        messages = [SystemMessage(content=SYSTEM_PROMPT)]
+        # Build system prompt with context if provided
+        system_prompt = SYSTEM_PROMPT
+        if chat_context:
+            context_parts = []
+            if chat_context.get("airplane_model"):
+                context_parts.append(f"- Modelo de avión: {chat_context['airplane_model']}")
+            if chat_context.get("component_type"):
+                context_parts.append(f"- Componente/Sistema: {chat_context['component_type']}")
+            
+            if context_parts:
+                system_prompt += "\n\nCONTEXTO DE ESTA CONVERSACIÓN:\n" + "\n".join(context_parts)
+                system_prompt += "\n\nEnfoca tus respuestas específicamente en este modelo de avión y este sistema/componente."
+            
+            # Add current step context if available
+            if chat_context.get("current_step"):
+                step = chat_context["current_step"]
+                system_prompt += f"\n\nPASO ACTUAL DEL PROCEDIMIENTO:\n"
+                system_prompt += f"Paso {step['step_number']}: {step['title']}\n"
+                if step.get('description'):
+                    system_prompt += f"Descripción: {step['description']}\n"
+                system_prompt += "\nTu objetivo es ayudar al operario a completar ESTE PASO ESPECÍFICO. "
+                system_prompt += "Enfócate en responder preguntas relacionadas con este paso. "
+                system_prompt += "Cuando el operario confirme que ha completado el paso, recuérdale que debe marcar el paso como completado usando el botón correspondiente."
+        
+        messages = [SystemMessage(content=system_prompt)]
         
         # Add message history if provided
-        if message_history:
-            for msg in message_history:
+        if history:
+            for msg in history:
                 if msg["role"] == "user":
                     messages.append(HumanMessage(content=msg["content"]))
                 elif msg["role"] == "assistant":
                     messages.append(AIMessage(content=msg["content"]))
         
         # Add current user message
-        messages.append(HumanMessage(content=user_message))
+        messages.append(HumanMessage(content=message))
         
         response = await self.model.ainvoke(messages)
         return response.content
     
     async def chat_with_image(
         self,
-        user_message: str,
         image_path: str,
-        message_history: list[dict] = None
+        message: str,
+        history: list[dict] = None,
+        chat_context: dict = None
     ) -> dict:
         """
         Process a message with an image using Gemini Vision.
         
         Args:
-            user_message: The user's question about the image
             image_path: Path to the image file
-            message_history: Optional previous messages for context
+            message: The user's question about the image
+            history: Optional previous messages for context
+            chat_context: Optional dict with airplane_model and component_type
             
         Returns:
             dict with:
@@ -92,15 +114,21 @@ class GeminiService:
         
         # Build context from history
         context = ""
-        if message_history:
+        if history:
             context = "\n\nContexto de la conversación previa:\n"
-            for msg in message_history[-3:]:  # Last 3 messages for context
+            for msg in history[-3:]:  # Last 3 messages for context
                 role = "Usuario" if msg["role"] == "user" else "Asistente"
                 context += f"{role}: {msg['content']}\n"
         
+        # Build context-aware prompt
+        context_info = ""
+        if chat_context:
+            context_info = f"\nModelo de avión: {chat_context.get('airplane_model', 'No especificado')}\n"
+            context_info += f"Sistema/Componente: {chat_context.get('component_type', 'No especificado')}\n"
+        
         # Structured prompt for annotations - SIMPLIFIED for JSON mode
-        prompt = f"""Analiza esta imagen de un motor de avión y responde a: {user_message}
-
+        prompt = f"""Analiza esta imagen de un motor de avión y responde a: {message}
+{context_info}
 Identifica 5-6 componentes principales del motor.
 
 REGLAS para círculos:

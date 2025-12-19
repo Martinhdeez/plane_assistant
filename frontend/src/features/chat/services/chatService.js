@@ -21,12 +21,36 @@ export async function getChats() {
 /**
  * Create a new chat
  * @param {string} title - Chat title
+ * @param {string|null} airplane_model - Airplane model (optional)
+ * @param {string|null} component_type - Component type (optional)
+ * @param {File|null} template - PDF template file (optional)
  * @returns {Promise<Object>}
  */
-export async function createChat(title) {
+export async function createChat(title, airplane_model, component_type, template = null) {
+    // Use FormData to support file upload
+    const formData = new FormData();
+
+    // Build chat_data JSON
+    const chatData = {
+        title,
+        airplane_model,
+        component_type
+    };
+
+    // Send as form fields
+    formData.append('chat_data', JSON.stringify(chatData));
+
+    if (template) {
+        formData.append('template', template);
+    }
+
     const response = await authenticatedFetch(getApiUrl('/chats/'), {
         method: 'POST',
-        body: JSON.stringify({ title }),
+        headers: {
+            // Don't set Content-Type - browser will set it with boundary for FormData
+            'Content-Type': undefined
+        },
+        body: formData,
     });
 
     if (!response.ok) {

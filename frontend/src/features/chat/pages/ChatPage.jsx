@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getChat, sendMessage, updateChatTitle, deleteChat } from '../services/chatService';
+import { getSteps, getCurrentStep, completeStep } from '../services/stepService';
 import { generateHistory } from '../../histories/services/historiesService';
 import { isAuthenticated } from '../../auth/services/authService';
 import ChatHeader from '../components/ChatHeader';
 import MessageBubble from '../components/MessageBubble';
 import ChatInputForm from '../components/ChatInputForm';
+import CurrentStepCard from '../components/CurrentStepCard';
 import ImageModal from '../components/ImageModal';
 import TypingIndicator from '../components/TypingIndicator';
 import './ChatPage.css';
@@ -26,6 +28,8 @@ function ChatPage() {
   const [imagePreview, setImagePreview] = useState(null);
   const [modalImage, setModalImage] = useState(null);
   const [generatingHistory, setGeneratingHistory] = useState(false);
+  const [currentStep, setCurrentStep] = useState(null);
+  const [isCompletingStep, setIsCompletingStep] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -93,6 +97,23 @@ function ChatPage() {
       const chatData = await getChat(chatId);
       setChat(chatData);
       setMessages(chatData.messages || []);
+      
+      console.log('📋 Chat data loaded:', chatData);
+      console.log('📄 Has template?', chatData.instruction_template_filename);
+      
+      // Fetch current step if chat has template
+      if (chatData.instruction_template_filename) {
+        console.log('🔍 Fetching current step for chat', chatId);
+        try {
+          const step = await getCurrentStep(chatId);
+          console.log('✅ Current step fetched:', step);
+          setCurrentStep(step);
+        } catch (err) {
+          console.log('❌ No current step or error fetching step:', err);
+        }
+      } else {
+        console.log('⚠️ No template filename, skipping step fetch');
+      }
     } catch (err) {
       setError('Error al cargar la conversación');
       console.error('Error fetching chat:', err);
@@ -249,6 +270,32 @@ function ChatPage() {
     }
   };
 
+  const handleCompleteStep = async () => {
+    if (!currentStep || isCompletingStep) return;
+
+    setIsCompletingStep(true);
+    try {
+      await completeStep(chatId, currentStep.id);
+      // Fetch next step
+      const nextStep = await getCurrentStep(chatId);
+      setCurrentStep(nextStep);
+      
+      if (nextStep) {
+        // Show success message
+        setError('');
+      } else {
+        // All steps completed
+        alert('¡Felicidades! Has completado todos los pasos del procedimiento.');
+      }
+    } catch (err) {
+      setError('Error al completar el paso');
+      console.error('Error completing step:', err);
+    } finally {
+      setIsCompletingStep(false);
+    }
+  };
+
+
   if (loading) {
     return (
       <div className="chat-page">
@@ -288,7 +335,17 @@ function ChatPage() {
         generatingHistory={generatingHistory}
       />
 
-      <div className="chat-container">
+      {currentStep && (
+        <div className="step-card-fixed-wrapper">
+          <CurrentStepCard 
+            step={currentStep} 
+            onComplete={handleCompleteStep}
+            isCompleting={isCompletingStep}
+          />
+        </div>
+      )}
+
+      <div className="chat-container" style={{ paddingTop: currentStep ? '220px' : '100px' }}>
         <div className="messages-container">
           {messages.map((message, index) => (
             <MessageBubble

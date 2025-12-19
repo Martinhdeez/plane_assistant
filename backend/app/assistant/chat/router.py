@@ -15,23 +15,75 @@ router = APIRouter(prefix="/chats", tags=["chats"])
 
 @router.post("/", response_model=ChatResponse, status_code=status.HTTP_201_CREATED)
 async def create_chat(
-    chat_data: ChatCreate,
     current_user: Annotated[User, Depends(get_current_user)],
-    db: Annotated[AsyncSession, Depends(get_db)]
+    db: Annotated[AsyncSession, Depends(get_db)],
+    chat_data: str = Form(...),
+    template: UploadFile | None = File(None)
 ):
     """Create a new chat for the current user."""
+    from app.core.storage import storage_service
+    import json
+    
+    # Parse chat_data JSON
+    try:
+        chat_dict = json.loads(chat_data)
+        chat_create = ChatCreate(**chat_dict)
+    except (json.JSONDecodeError, ValueError) as e:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid chat_data: {str(e)}"
+        )
+    
+    # Handle template upload if provided
+    template_path = None
+    template_filename = None
+    if template:
+        template_info = await storage_service.save_instruction_template(
+            user_id=current_user.id,
+            file=template
+        )
+        template_path = template_info["path"]
+        template_filename = template_info["filename"]
+    
     new_chat = Chat(
         user_id=current_user.id,
-        title=chat_data.title
+        title=chat_create.title,
+        airplane_model=chat_create.airplane_model,
+        component_type=chat_create.component_type,
+        instruction_template_path=template_path,
+        instruction_template_filename=template_filename
     )
     db.add(new_chat)
     await db.commit()
     await db.refresh(new_chat)
     
+    # If template was uploaded, extract steps
+    if template_path:
+        from app.assistant.template_processor import extract_steps_from_pdf
+        try:
+            steps_data = await extract_steps_from_pdf(template_path)
+            # Create Step records
+            from app.assistant.step.step import Step
+            for step_data in steps_data:
+                step = Step(
+                    chat_id=new_chat.id,
+                    step_number=step_data["step_number"],
+                    title=step_data["title"],
+                    description=step_data.get("description")
+                )
+                db.add(step)
+            await db.commit()
+        except Exception as e:
+            print(f"Error extracting steps: {e}")
+            # Continue even if step extraction fails
+    
     return ChatResponse(
         id=new_chat.id,
         user_id=new_chat.user_id,
         title=new_chat.title,
+        airplane_model=new_chat.airplane_model,
+        component_type=new_chat.component_type,
+        instruction_template_filename=new_chat.instruction_template_filename,
         created_at=new_chat.created_at,
         message_count=0
     )
@@ -58,6 +110,8 @@ async def list_chats(
             id=chat.id,
             user_id=chat.user_id,
             title=chat.title,
+            airplane_model=chat.airplane_model,
+            component_type=chat.component_type,
             created_at=chat.created_at,
             message_count=message_count
         )
@@ -116,6 +170,9 @@ async def get_chat(
         id=chat.id,
         user_id=chat.user_id,
         title=chat.title,
+        airplane_model=chat.airplane_model,
+        component_type=chat.component_type,
+        instruction_template_filename=chat.instruction_template_filename,
         created_at=chat.created_at,
         messages=message_responses
     )
@@ -154,6 +211,8 @@ async def update_chat(
         id=chat.id,
         user_id=chat.user_id,
         title=chat.title,
+        airplane_model=chat.airplane_model,
+        component_type=chat.component_type,
         created_at=chat.created_at,
         message_count=message_count
     )
@@ -242,13 +301,38 @@ async def send_message(
     await db.refresh(user_message)
     
     # Get AI response
+    # Prepare chat context
+    chat_context = {}
+    if chat.airplane_model:
+        chat_context["airplane_model"] = chat.airplane_model
+    if chat.component_type:
+        chat_context["component_type"] = chat.component_type
+    
+    # Add current step context if available
+    from app.assistant.step.step import Step
+    result_step = await db.execute(
+        select(Step)
+        .where(Step.chat_id == chat_id, Step.is_completed == False)
+        .order_by(Step.step_number)
+        .limit(1)
+    )
+    current_step = result_step.scalars().first()
+    
+    if current_step:
+        chat_context["current_step"] = {
+            "step_number": current_step.step_number,
+            "title": current_step.title,
+            "description": current_step.description
+        }
+    
     try:
         if user_image_info:
             # Process with Gemini Vision
             ai_response = await gemini_service.chat_with_image(
-                user_message=content,
                 image_path=user_image_info["path"],
-                message_history=message_history
+                message=content,
+                history=message_history,
+                chat_context=chat_context
             )
             
             # Draw annotations on image
@@ -271,8 +355,9 @@ async def send_message(
         else:
             # Regular text chat
             ai_response_content = await gemini_service.chat(
-                user_message=content,
-                message_history=message_history
+                message=content,
+                history=message_history,
+                chat_context=chat_context
             )
             ai_image_info = None
             

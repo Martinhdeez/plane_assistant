@@ -7,6 +7,7 @@ from app.auth.router import router as auth_router
 from app.user.router import router as user_router
 from app.assistant.router import router as assistant_router
 from app.assistant.chat.router import router as chat_router
+from app.assistant.step.router import router as step_router
 from app.maintenance_history.router import router as maintenance_history_router
 from app.admin.router import router as admin_router
 from app.auth.dependencies import get_current_user
@@ -21,10 +22,7 @@ app = FastAPI(
 # CORS middleware for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",  # Vite default port
-        "http://localhost:5174"   # Alternative port
-    ],
+    allow_origins=["*"],  # Allow all origins for Docker
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,6 +32,7 @@ app.include_router(auth_router, prefix="/api")
 app.include_router(user_router, prefix="/api")
 app.include_router(assistant_router, prefix="/api")
 app.include_router(chat_router, prefix="/api")
+app.include_router(step_router, prefix="/api")
 app.include_router(maintenance_history_router)
 app.include_router(admin_router, prefix="/api")
 
@@ -50,7 +49,7 @@ async def serve_image(
     file_path = Path(path)
     
     # Security: ensure path is within uploads directory
-    if not str(file_path).startswith(settings.AI_IMG_PATH):
+    if not str(file_path).startswith("uploads/users/"):
         raise HTTPException(status_code=403, detail="Access denied")
     
     # Verify file exists
