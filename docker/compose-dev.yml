@@ -1,35 +1,34 @@
-
 services:
   postgresdb:
     container_name: pa-postgres
-    image: plane_assistant/db:latest
+    image: plane_assistant/db:dev
     restart: unless-stopped
     volumes: 
       - "postgres_data:/var/lib/postgresql"
+    ports:
+      - "127.0.0.1:5432:5432"
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "secret"
       POSTGRES_DB: "plane_assistant"
   backend:
     container_name: pa-fastapi
-    image: plane_assistant/api:latest
+    image: plane_assistant/api:dev
     restart: unless-stopped
     volumes:
       - "./config:/config"
       - "./uploads:/uploads"
-    environment:
-      WEB_CONCURRENCY: 4 # Number of workers (child processes)
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     depends_on:
       postgresdb:
         condition: service_healthy
   frontend:
     container_name: pa-vite
-    image: plane_assistant/web:latest
+    image: plane_assistant/web:dev
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "127.0.0.1:5173:5173"
     depends_on:
       postgresdb:
         condition: service_healthy

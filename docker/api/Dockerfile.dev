@@ -3,9 +3,8 @@ FROM python:3.13.11-alpine
 WORKDIR /build
 
 COPY ./backend/requirements.txt .
-
 RUN apk add --no-cache gcc clang
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 RUN apk add --no-cache curl jq
 COPY ./backend/.env_example .
@@ -19,7 +18,7 @@ COPY --exclude=uploads \
     --exclude=.venv \
     ./backend/ .
 
-COPY ./docker/fastapi/entrypoint.sh .
+COPY ./docker/api/entrypoint.sh .
 RUN chmod +x ./entrypoint.sh
 
 HEALTHCHECK --interval=5s --timeout=3s --retries=3 \
@@ -34,6 +33,5 @@ ENV ENV_FILE=/config/.env
 ENV UVICORN_HOST=0.0.0.0
 ENV UVICORN_PORT=8000
 
-# Remove --reload in prod
 ENTRYPOINT ["/app/entrypoint.sh", "uvicorn"]
 CMD ["app.main:app", "--reload"] 
