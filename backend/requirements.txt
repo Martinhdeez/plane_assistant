@@ -6,18 +6,12 @@ python-multipart==0.0.20
 # Database
 sqlalchemy==2.0.36
 asyncpg==0.30.0
-<<<<<<< HEAD
 greenlet==3.3.0
-=======
->>>>>>> origin/main
 alembic==1.14.0
 
 # Data Validation
 pydantic==2.10.3
-<<<<<<< HEAD
 pydantic[email]==2.10.3
-=======
->>>>>>> origin/main
 pydantic-settings==2.6.1
 
 # Authentication & Security
