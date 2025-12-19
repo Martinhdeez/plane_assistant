@@ -18,7 +18,7 @@ services:
       - "./config:/config"
       - "./uploads:/uploads"
     environment:
-      WEB_CONCURRENCY: 1 # Number of workers (child processes)
+      WEB_CONCURRENCY: 4 # Number of workers (child processes)
     ports:
       - "8000:8000"
     depends_on:
@@ -28,6 +28,8 @@ services:
     container_name: pa-website
     image: plane_assistant/web:latest
     restart: unless-stopped
+    environment:
+      VITE_API_URL: 'http://localhost:2000' # Change to your API URL
     ports:
       - "8080:80"
     depends_on:
