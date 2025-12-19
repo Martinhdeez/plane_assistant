@@ -29,3 +29,5 @@ API will run on port 8000 and web server in port 8080.
 docker compose up -f compose-dev.yml -d
 ```
 Database will run on port 5432, API will run on port 8000 and web server in port 5173.
+## Important notes
+Running the docker compose stack will create two folders: `config` (where the `.env` configuration file will be stored), and `uploads` (for templates and images).

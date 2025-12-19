@@ -1,4 +1,3 @@
-
 services:
   postgresdb:
     container_name: pa-postgres
