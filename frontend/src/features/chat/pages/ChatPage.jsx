@@ -66,9 +66,9 @@ function ChatPage() {
       
       for (const { index, message } of messagesToUpdate) {
         try {
-          const imageUrl = message.image_url.startsWith('http') 
-            ? message.image_url
-            : `${import.meta.env.VITE_API_URL}${message.image_url}`;
+          const imageUrl = message.image_url.startsWith('/') 
+            ? `${import.meta.env.VITE_API_URL}${message.image_url}`
+            : message.image_url;
           
           const response = await fetch(imageUrl, {
             headers: { 'Authorization': `Bearer ${token}` }
