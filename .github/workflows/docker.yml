@@ -15,8 +15,6 @@ jobs:
     steps:
     - name: Setup repository
       uses: actions/checkout@v6
-      with:
-        ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - name: Registry login
       uses: docker/login-action@v3
       with:
@@ -32,15 +30,13 @@ jobs:
         file: './docker/db/Dockerfile'
         push: true
         platforms: linux/amd64
-        tags: ghcr.io/${{ github.repo }}/db:latest
+        tags: ghcr.io/martinhdeez/plane_assistant/db:latest
 
   api-image:
     runs-on: ubuntu-latest
     steps:
     - name: Setup repository
       uses: actions/checkout@v6
-      with:
-        ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - name: Registry login
       uses: docker/login-action@v3
       with:
@@ -56,15 +52,13 @@ jobs:
         file: './docker/api/Dockerfile'
         push: true
         platforms: linux/amd64
-        tags: ghcr.io/${{ github.repo }}/api:latest
+        tags: ghcr.io/martinhdeez/plane_assistant/api:latest
 
   web-image:
     runs-on: ubuntu-latest
     steps:
     - name: Setup repository
       uses: actions/checkout@v6
-      with:
-        ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - name: Registry login
       uses: docker/login-action@v3
       with:
@@ -80,4 +74,4 @@ jobs:
         file: './docker/web/Dockerfile'
         push: true
         platforms: linux/amd64
-        tags: ghcr.io/${{ github.repo }}/web:latest
+        tags: ghcr.io/martinhdeez/plane_assistant/web:latest
