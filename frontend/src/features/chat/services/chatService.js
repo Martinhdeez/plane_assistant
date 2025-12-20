@@ -5,7 +5,7 @@ import { authenticatedFetch, getApiUrl } from '../../../utils/api';
  * @returns {Promise<Array>}
  */
 export async function getChats() {
-    const response = await authenticatedFetch(getApiUrl('/chats'), {
+    const response = await authenticatedFetch(getApiUrl('/chats/'), {
         method: 'GET',
     });
 
