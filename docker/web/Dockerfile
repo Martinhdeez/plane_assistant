@@ -4,8 +4,7 @@ WORKDIR /app
 
 COPY ./frontend/package.json .
 COPY ./frontend/package-lock.json .
-RUN npm ci --omit=dev && npm cache clean --force
-RUN npm install --global vite
+RUN npm ci && npm cache clean --force
 
 COPY ./frontend/ .
 
