@@ -56,11 +56,11 @@ class StorageService:
         with open(file_path, "wb") as f:
             f.write(content)
         
-        # Get absolute path and then relative to cwd
+        # Store absolute path for Docker volume support
         abs_path = file_path.resolve()
         
         return {
-            "path": str(abs_path.relative_to(Path.cwd())),
+            "path": str(abs_path),
             "filename": file.filename,
             "size": len(content),
             "type": file.content_type
@@ -84,11 +84,11 @@ class StorageService:
         with open(file_path, "wb") as f:
             f.write(image_data)
         
-        # Get absolute path and then relative to cwd
+        # Store absolute path for Docker volume support
         abs_path = file_path.resolve()
         
         return {
-            "path": str(abs_path.relative_to(Path.cwd())),
+            "path": str(abs_path),
             "filename": filename,
             "size": len(image_data),
             "type": f"image/{extension[1:]}"
@@ -169,11 +169,11 @@ class StorageService:
         with open(file_path, "wb") as f:
             f.write(content)
         
-        # Get absolute path and then relative to cwd
+        # Store absolute path for Docker volume support
         abs_path = file_path.resolve()
         
         return {
-            "path": str(abs_path.relative_to(Path.cwd())),
+            "path": str(abs_path),
             "filename": file.filename,
             "size": len(content),
             "type": file.content_type
