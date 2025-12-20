@@ -32,7 +32,7 @@ jobs:
         file: './docker/db/Dockerfile'
         push: true
         platforms: linux/amd64
-        tags: ghcr.io/${{ github.repo ]]/db:latest
+        tags: ghcr.io/${{ github.repo }}/db:latest
 
   api-image:
     runs-on: ubuntu-latest
