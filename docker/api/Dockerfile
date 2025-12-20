@@ -23,9 +23,9 @@ RUN apt update &&\
     apt install curl jq -y &&\
     rm -rf /var/lib/apt/lists/*
 
-COPY ./backend/alembic .
-COPY ./backend/app .
-COPY ./backend/alembic.ini .
+COPY ./backend/alembic /app/alembic
+COPY ./backend/app /app/app
+COPY ./backend/alembic.ini /app/alembic.ini
 
 COPY ./docker/api/entrypoint.sh .
 RUN chmod +x ./entrypoint.sh
