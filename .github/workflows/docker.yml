@@ -3,75 +3,61 @@ name: Plane Assistant Production Docker
 on:
   push:
     branches: [ "prod" ]
-  pull_request:
-    branches: [ "prod" ]
 
-permissions:
-  packages: write
-  
 jobs:
   db-image:
     runs-on: ubuntu-latest
     steps:
-    - name: Setup repository
-      uses: actions/checkout@v6
-    - name: Registry login
-      uses: docker/login-action@v3
-      with:
-          registry: https://ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    - name: Build the Image
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        file: './docker/db/Dockerfile'
-        push: true
-        platforms: linux/amd64
-        tags: ghcr.io/martinhdeez/plane_assistant/db:latest
+      - name: Setup repository
+        uses: actions/checkout@v6 
+      - name: Registry login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: martinhdeez
+          password: ${{ secrets.DATATHON_PAT }} 
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: './docker/db/Dockerfile'
+          push: true
+          tags: ghcr.io/martinhdeez/plane_assistant/db:latest
 
   api-image:
     runs-on: ubuntu-latest
     steps:
-    - name: Setup repository
-      uses: actions/checkout@v6
-    - name: Registry login
-      uses: docker/login-action@v3
-      with:
-          registry: https://ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    - name: Build the Image
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        file: './docker/api/Dockerfile'
-        push: true
-        platforms: linux/amd64
-        tags: ghcr.io/martinhdeez/plane_assistant/api:latest
+      - name: Setup repository
+        uses: actions/checkout@v6
+      - name: Registry login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: martinhdeez
+          password: ${{ secrets.DATATHON_PAT }}
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: './docker/api/Dockerfile'
+          push: true
+          tags: ghcr.io/martinhdeez/plane_assistant/api:latest
 
   web-image:
     runs-on: ubuntu-latest
     steps:
-    - name: Setup repository
-      uses: actions/checkout@v6
-    - name: Registry login
-      uses: docker/login-action@v3
-      with:
-          registry: https://ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    - name: Build the Image
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        file: './docker/web/Dockerfile'
-        push: true
-        platforms: linux/amd64
-        tags: ghcr.io/martinhdeez/plane_assistant/web:latest
+      - name: Setup repository
+        uses: actions/checkout@v6
+      - name: Registry login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: martinhdeez
+          password: ${{ secrets.DATATHON_PAT }}
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: './docker/web/Dockerfile'
+          push: true
+          tags: ghcr.io/martinhdeez/plane_assistant/web:latest
