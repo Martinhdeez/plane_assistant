@@ -23,12 +23,9 @@ RUN apt update &&\
     apt install curl jq -y &&\
     rm -rf /var/lib/apt/lists/*
 
-COPY --exclude=uploads \
-    --exclude=.gitignore \
-    --exclude=requirements.txt \
-    --exclude=.env_example \
-    --exclude=.venv \
-    ./backend/ .
+COPY ./backend/alembic .
+COPY ./backend/app .
+COPY ./backend/alembic.ini .
 
 COPY ./docker/api/entrypoint.sh .
 RUN chmod +x ./entrypoint.sh
