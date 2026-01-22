@@ -96,19 +96,17 @@ Al crear el stack de compose, se crearan dos carpetas:
 ### Aplicación
  Fotos de como se ve la aplicación en ejecución:
 
-   #### Landing Page:  
-![](./assets/project_photos/1.png) 
+#### Landing Page:  
+![Landing Page](./assets/project_photos/1.png) 
     
-
-   #### Pantalla Principal: 
-![](./assets/project_photos/2.png)
+#### Pantalla Principal: 
+![Pantalla Principal](./assets/project_photos/2.png)
     
-   #### Creación Chat:
-![](./assets/project_photos/3.png) 
+#### Creación Chat:
+![Crear un chat](./assets/project_photos/3.png) 
 
-   #### Chat: 
-![](./assets/project_photos/4.png) 
+#### Chat: 
+![Chat](./assets/project_photos/4.png) 
    
-   #### Visor 3d: 
-![](./assets/project_photos/5.png) 
-
+#### Visor 3D: 
+![Visor 3D](./assets/project_photos/5.png) 
