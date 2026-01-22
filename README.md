@@ -5,7 +5,9 @@ Samuel Hermida Rojo
 
 ## Fuentes de datos
 - https://hub.docker.com/ (Imágenes de Docker)
-- 
+- https://sketchup.trimble.com/ (maquetas 3d)
+- Infomación y validación de profesional con mas de 20 años de experiencia en el sector aereonáutico
+
 
 ## Archivos
 ### Carpeta backend:
@@ -89,3 +91,24 @@ La API se ejecutará en el puerto 8000 del contenedor *pa-fastapi* y el servidor
 Al crear el stack de compose, se crearan dos carpetas:
 - **config**: Contiene la configuración en el archivo `.env`.
 - **uploads**: Contiene la ruta para subir plantillas e imágenes.
+
+
+### Aplicación
+ Fotos de como se ve la aplicación en ejecución:
+
+   #### Landing Page:  
+![](./assets/project_photos/1.png) 
+    
+
+   #### Pantalla Principal: 
+![](./assets/project_photos/2.png)
+    
+   #### Creación Chat:
+![](./assets/project_photos/3.png) 
+
+   #### Chat: 
+![](./assets/project_photos/4.png) 
+   
+   #### Visor 3d: 
+![](./assets/project_photos/5.png) 
+

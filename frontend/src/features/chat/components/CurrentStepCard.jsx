@@ -2,8 +2,7 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import './CurrentStepCard.css';
 
-function CurrentStepCard({ step, onComplete, onPrevious, hasPreviousStep, isCompleting, isGoingBack }) {
-  const [isExpanded, setIsExpanded] = useState(true);
+function CurrentStepCard({ step, onComplete, onPrevious, hasPreviousStep, isCompleting, isGoingBack, isExpanded, onToggleExpand }) {
 
   if (!step) return null;
 
@@ -18,7 +17,7 @@ function CurrentStepCard({ step, onComplete, onPrevious, hasPreviousStep, isComp
         
         <button 
           className="toggle-description-btn"
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={onToggleExpand}
           title={isExpanded ? 'Ocultar descripción' : 'Mostrar descripción'}
         >
           <svg width="28" height="28" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

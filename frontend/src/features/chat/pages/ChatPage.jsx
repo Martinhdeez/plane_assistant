@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getChat, sendMessage, updateChatTitle, deleteChat } from '../services/chatService';
 import { getSteps, getCurrentStep, completeStep, uncompleteStep } from '../services/stepService';
@@ -32,8 +32,12 @@ function ChatPage() {
   const [isCompletingStep, setIsCompletingStep] = useState(false);
   const [steps, setSteps] = useState([]);
   const [isGoingBack, setIsGoingBack] = useState(false);
+  const [isStepExpanded, setIsStepExpanded] = useState(true);
+  const [topPadding, setTopPadding] = useState(100);
+
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const stepCardWrapperRef = useRef(null);
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -46,6 +50,24 @@ function ChatPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Adjust top padding based on step card height
+  useLayoutEffect(() => {
+    if (currentStep && stepCardWrapperRef.current) {
+      const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+           // Base top position (60px) + height + extra spacing
+           const newHeight = entry.contentRect.height + 80;
+           setTopPadding(newHeight);
+        }
+      });
+      
+      resizeObserver.observe(stepCardWrapperRef.current);
+      return () => resizeObserver.disconnect();
+    } else {
+      setTopPadding(100);
+    }
+  }, [currentStep, isStepExpanded]);
 
   // Load authenticated images
   useEffect(() => {
@@ -379,7 +401,7 @@ function ChatPage() {
       />
 
       {currentStep && (
-        <div className="step-card-fixed-wrapper">
+        <div className="step-card-fixed-wrapper" ref={stepCardWrapperRef}>
           <CurrentStepCard 
             step={currentStep} 
             onComplete={handleCompleteStep}
@@ -387,11 +409,13 @@ function ChatPage() {
             hasPreviousStep={currentStep.step_number > 1}
             isCompleting={isCompletingStep}
             isGoingBack={isGoingBack}
+            isExpanded={isStepExpanded}
+            onToggleExpand={() => setIsStepExpanded(!isStepExpanded)}
           />
         </div>
       )}
 
-      <div className="chat-container" style={{ paddingTop: currentStep ? '220px' : '100px' }}>
+      <div className="chat-container" style={{ paddingTop: `${topPadding}px` }}>
         <div className="messages-container">
           {messages.map((message, index) => (
             <MessageBubble
