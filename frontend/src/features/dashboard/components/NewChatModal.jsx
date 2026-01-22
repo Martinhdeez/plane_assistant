@@ -119,14 +119,14 @@ function NewChatModal({ isOpen, onClose, onCreate }) {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
+    <div className="new-chat-modal-overlay" onClick={handleClose}>
+      <div className="new-chat-modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="new-chat-modal-header">
           <h2>Nueva Conversación</h2>
-          <button className="modal-close" onClick={handleClose}>✕</button>
+          <button className="new-chat-modal-close" onClick={handleClose}>✕</button>
         </div>
 
-        <div className="modal-steps">
+        <div className="new-chat-modal-steps">
           <div className={`step-indicator ${step === 1 ? 'active' : step > 1 ? 'completed' : ''}`}>
             <span className="step-number">1</span>
             <span className="step-label">Modelo</span>
@@ -143,7 +143,7 @@ function NewChatModal({ isOpen, onClose, onCreate }) {
           </div>
         </div>
 
-        <div className="modal-body">
+        <div className="new-chat-modal-body">
           {step === 1 && (
             <div className="selection-step">
               <h3>Selecciona el modelo de avión</h3>
@@ -226,7 +226,9 @@ function NewChatModal({ isOpen, onClose, onCreate }) {
           )}
         </div>
 
-        <div className="modal-footer">
+
+
+        <div className="new-chat-modal-footer">
           {(step === 2 || step === 3) && (
             <button className="btn-secondary" onClick={handleBack} disabled={isCreating}>
               Atrás

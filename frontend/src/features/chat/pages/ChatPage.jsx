@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getChat, sendMessage, updateChatTitle, deleteChat } from '../services/chatService';
-import { getSteps, getCurrentStep, completeStep } from '../services/stepService';
+import { getSteps, getCurrentStep, completeStep, uncompleteStep } from '../services/stepService';
 import { generateHistory } from '../../histories/services/historiesService';
 import { isAuthenticated } from '../../auth/services/authService';
 import ChatHeader from '../components/ChatHeader';
@@ -30,6 +30,8 @@ function ChatPage() {
   const [generatingHistory, setGeneratingHistory] = useState(false);
   const [currentStep, setCurrentStep] = useState(null);
   const [isCompletingStep, setIsCompletingStep] = useState(false);
+  const [steps, setSteps] = useState([]);
+  const [isGoingBack, setIsGoingBack] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -108,6 +110,11 @@ function ChatPage() {
           const step = await getCurrentStep(chatId);
           console.log('✅ Current step fetched:', step);
           setCurrentStep(step);
+          
+          // Also fetch all steps to know if we can go back
+          const allSteps = await getSteps(chatId);
+          console.log('📋 All steps fetched:', allSteps);
+          setSteps(allSteps.steps || []);
         } catch (err) {
           console.log('❌ No current step or error fetching step:', err);
         }
@@ -276,6 +283,11 @@ function ChatPage() {
     setIsCompletingStep(true);
     try {
       await completeStep(chatId, currentStep.id);
+      
+      // Refresh steps list to update hasPreviousStep calculation
+      const updatedSteps = await getSteps(chatId);
+      setSteps(updatedSteps.steps || []);
+      
       // Fetch next step
       const nextStep = await getCurrentStep(chatId);
       setCurrentStep(nextStep);
@@ -292,6 +304,37 @@ function ChatPage() {
       console.error('Error completing step:', err);
     } finally {
       setIsCompletingStep(false);
+    }
+  };
+
+  const handlePreviousStep = async () => {
+    if (!currentStep || isGoingBack) return;
+
+    setIsGoingBack(true);
+    try {
+      // Find previous completed step
+      const previousStep = steps
+        .filter(s => s.is_completed && s.step_number < currentStep.step_number)
+        .sort((a, b) => b.step_number - a.step_number)[0];
+      
+      if (previousStep) {
+        await uncompleteStep(chatId, previousStep.id);
+        
+        // Refresh steps
+        const updatedSteps = await getSteps(chatId);
+        setSteps(updatedSteps.steps || []);
+        
+        // Get new current step
+        const newCurrent = await getCurrentStep(chatId);
+        setCurrentStep(newCurrent);
+        
+        setError('');
+      }
+    } catch (err) {
+      setError('Error al retroceder al paso anterior');
+      console.error('Error going back:', err);
+    } finally {
+      setIsGoingBack(false);
     }
   };
 
@@ -340,7 +383,10 @@ function ChatPage() {
           <CurrentStepCard 
             step={currentStep} 
             onComplete={handleCompleteStep}
+            onPrevious={handlePreviousStep}
+            hasPreviousStep={currentStep.step_number > 1}
             isCompleting={isCompletingStep}
+            isGoingBack={isGoingBack}
           />
         </div>
       )}

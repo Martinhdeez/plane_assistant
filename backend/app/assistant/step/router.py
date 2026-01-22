@@ -114,3 +114,39 @@ async def complete_step(
     await db.refresh(step)
     
     return StepResponse.model_validate(step)
+
+@router.patch("/{step_id}/uncomplete", response_model=StepResponse)
+async def uncomplete_step(
+    chat_id: int,
+    step_id: int,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)]
+):
+    """Mark a step as incomplete (go back to previous step)"""
+    # Verify chat belongs to user
+    result = await db.execute(
+        select(Chat).where(Chat.id == chat_id, Chat.user_id == current_user.id)
+    )
+    chat = result.scalars().first()
+    
+    if not chat:
+        raise HTTPException(status_code=404, detail="Chat not found")
+    
+    # Get step
+    result = await db.execute(
+        select(Step).where(Step.id == step_id, Step.chat_id == chat_id)
+    )
+    step = result.scalars().first()
+    
+    if not step:
+        raise HTTPException(status_code=404, detail="Step not found")
+    
+    # Mark as incomplete
+    step.is_completed = False
+    step.completed_at = None
+    
+    await db.commit()
+    await db.refresh(step)
+    
+    return StepResponse.model_validate(step)
+

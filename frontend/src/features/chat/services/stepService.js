@@ -57,3 +57,23 @@ export async function completeStep(chatId, stepId) {
 
     return await response.json();
 }
+
+/**
+ * Mark a step as incomplete (go back)
+ * @param {number} chatId
+ * @param {number} stepId
+ * @returns {Promise<Object>}
+ */
+export async function uncompleteStep(chatId, stepId) {
+    const response = await authenticatedFetch(getApiUrl(`/chats/${chatId}/steps/${stepId}/uncomplete`), {
+        method: 'PATCH',
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Failed to uncomplete step');
+    }
+
+    return await response.json();
+}
+

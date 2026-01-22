@@ -1,4 +1,4 @@
-.modal-overlay {
+.new-chat-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -22,14 +22,14 @@
   }
 }
 
-.modal-content {
+.new-chat-modal-content {
   background: rgba(20, 30, 48, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
-  padding: 32px;
-  max-width: 700px;
-  width: 90%;
-  max-height: 85vh;
+  padding: 36px 48px;
+  max-width: 1600px;
+  width: 95%;
+  max-height: 95vh;
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   animation: slideUp 0.3s ease-out;
@@ -46,14 +46,14 @@
   }
 }
 
-.modal-header {
+.new-chat-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
-.modal-header h2 {
+.new-chat-modal-header h2 {
   margin: 0;
   font-size: 28px;
   font-weight: 600;
@@ -63,7 +63,7 @@
   background-clip: text;
 }
 
-.modal-close {
+.new-chat-modal-close {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.7);
@@ -78,17 +78,17 @@
   justify-content: center;
 }
 
-.modal-close:hover {
+.new-chat-modal-close:hover {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   transform: rotate(90deg);
 }
 
-.modal-steps {
+.new-chat-modal-steps {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
   gap: 16px;
 }
 
@@ -143,8 +143,9 @@
   margin-bottom: 24px;
 }
 
-.modal-body {
-  min-height: 300px;
+.new-chat-modal-body {
+  min-height: 280px;
+  padding: 0 24px;
 }
 
 .selection-step h3 {
@@ -165,12 +166,14 @@
 
 .selection-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  width: 100%;
 }
 
 .selection-grid.components {
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
 }
 
 .selection-card {
@@ -326,61 +329,11 @@
   transform: rotate(90deg);
 }
 
-.selection-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
-
-.selection-grid.components {
-  grid-template-columns: 1fr;
-}
-
-.selection-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 24px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-.selection-card:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(102, 126, 234, 0.5);
-  transform: translateY(-2px);
-}
-
-.selection-card.selected {
-  background: rgba(102, 126, 234, 0.15);
-  border-color: #667eea;
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
-}
-
-.card-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-
-.card-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 4px;
-}
-
-.card-description {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 8px;
-}
-
-.modal-footer {
+.new-chat-modal-footer {
   display: flex;
   gap: 12px;
-  margin-top: 32px;
-  padding-top: 24px;
+  margin-top: 28px;
+  padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -431,27 +384,27 @@
 }
 
 /* Scrollbar styling */
-.modal-content::-webkit-scrollbar {
+.new-chat-modal-content::-webkit-scrollbar {
   width: 8px;
 }
 
-.modal-content::-webkit-scrollbar-track {
+.new-chat-modal-content::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 4px;
 }
 
-.modal-content::-webkit-scrollbar-thumb {
+.new-chat-modal-content::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
 }
 
-.modal-content::-webkit-scrollbar-thumb:hover {
+.new-chat-modal-content::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .modal-content {
+  .new-chat-modal-content {
     padding: 24px;
     width: 95%;
   }
@@ -464,7 +417,7 @@
     font-size: 40px;
   }
 
-  .modal-header h2 {
+  .new-chat-modal-header h2 {
     font-size: 24px;
   }
 }

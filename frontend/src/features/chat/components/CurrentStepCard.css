@@ -46,62 +46,151 @@
   line-height: 1.3;
 }
 
-.step-actions {
+/* Modern Professional Button Styling - Apple/GitHub Inspired */
+
+.step-header-row {
   display: flex;
-  gap: 8px;
-  flex-shrink: 0;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.toggle-btn {
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
+.step-actions-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Toggle Description Button - Minimal Top Right */
+.toggle-description-btn {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
   border: none;
-  width: 36px;
-  height: 36px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-left: auto;
 }
 
-.toggle-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-.complete-step-btn {
-  background: rgba(76, 175, 80, 0.3);
+.toggle-description-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
   color: white;
-  border: 2px solid rgba(76, 175, 80, 0.5);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  font-size: 20px;
+}
+
+.toggle-description-btn svg {
+  width: 28px;
+  height: 28px;
+  transition: transform 0.2s ease;
+}
+
+/* Action Buttons - Icon-Only Style with Large Arrows */
+.step-action-btn {
+  flex: 1;
+  min-height: 72px;
+  min-width: 72px;
+  padding: 20px;
+  border-radius: 16px;
+  border: 2px solid;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.complete-step-btn:hover:not(:disabled) {
-  background: rgba(76, 175, 80, 0.8);
-  border-color: rgba(76, 175, 80, 1);
+.step-action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.step-action-btn:hover::before {
+  opacity: 1;
+}
+
+.step-action-btn svg {
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+/* Previous Button - Subtle Warning Style */
+.previous-btn {
+  background: rgba(255, 193, 7, 0.15);
+  border-color: rgba(255, 193, 7, 0.4);
+  color: #FFC107;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.15);
+}
+
+.previous-btn:hover:not(:disabled) {
+  background: rgba(255, 193, 7, 0.25);
+  border-color: rgba(255, 193, 7, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(255, 193, 7, 0.25);
+}
+
+.previous-btn:hover:not(:disabled) svg {
+  transform: translateX(-3px);
+}
+
+.previous-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Complete Button - Primary Action Style */
+.complete-btn {
+  background: rgba(76, 175, 80, 0.2);
+  border-color: rgba(76, 175, 80, 0.5);
+  color: #66BB6A;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.15);
+}
+
+.complete-btn:hover:not(:disabled) {
+  background: rgba(76, 175, 80, 0.3);
+  border-color: rgba(76, 175, 80, 0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.25);
+}
+
+.complete-btn:hover:not(:disabled) svg {
   transform: scale(1.1);
 }
 
-.complete-step-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.complete-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
-/* Description with markdown */
+/* Disabled State */
+.step-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.step-action-btn:disabled::before {
+  opacity: 0;
+}
+
+/* Description with markdown - Enhanced Chat-like Format */
 .step-description {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border-left: 4px solid rgba(255, 255, 255, 0.3);
   animation: slideDown 0.3s ease;
 }
 
@@ -116,41 +205,170 @@
   }
 }
 
+/* Headings */
+.step-description h1,
+.step-description h2,
+.step-description h3 {
+  color: #ffffff;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.step-description h1 {
+  font-size: 24px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 8px;
+}
+
+.step-description h2 {
+  font-size: 21px;
+}
+
+.step-description h3 {
+  font-size: 19px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.step-description h1:first-child,
+.step-description h2:first-child,
+.step-description h3:first-child {
+  margin-top: 0;
+}
+
+/* Paragraphs */
 .step-description p {
   color: rgba(255, 255, 255, 0.95);
-  font-size: 17px;
-  line-height: 1.7;
-  margin: 0 0 12px 0;
+  font-size: 19px;
+  line-height: 1.8;
+  margin: 0 0 16px 0;
 }
 
 .step-description p:last-child {
   margin-bottom: 0;
 }
 
+/* Lists - Numbered and Bulleted */
 .step-description ul,
 .step-description ol {
   color: rgba(255, 255, 255, 0.95);
-  font-size: 17px;
-  line-height: 1.7;
-  margin: 8px 0;
-  padding-left: 24px;
+  font-size: 18px;
+  line-height: 1.8;
+  margin: 16px 0;
+  padding-left: 32px;
+}
+
+.step-description ol {
+  counter-reset: item;
 }
 
 .step-description li {
-  margin-bottom: 8px;
+  margin-bottom: 20px;
+  padding-left: 8px;
 }
 
-.step-description strong {
-  color: white;
+.step-description ol > li {
+  position: relative;
+}
+
+.step-description ul > li::marker {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 20px;
+}
+
+.step-description ol > li::marker {
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 700;
 }
 
-.step-description code {
-  background: rgba(0, 0, 0, 0.2);
+/* Nested lists */
+.step-description li > ul,
+.step-description li > ol {
+  margin: 8px 0;
+  padding-left: 28px;
+}
+
+/* Strong/Bold text */
+.step-description strong {
+  color: white;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
-  font-size: 15px;
 }
+
+/* Emphasis/Italic */
+.step-description em {
+  color: rgba(255, 255, 255, 0.9);
+  font-style: italic;
+}
+
+/* Code inline */
+.step-description code {
+  background: rgba(0, 0, 0, 0.4);
+  color: #66BB6A;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-family: 'Courier New', monospace;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Code blocks */
+.step-description pre {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 16px 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.step-description pre code {
+  background: transparent;
+  padding: 0;
+  border: none;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Blockquotes */
+.step-description blockquote {
+  border-left: 4px solid rgba(255, 193, 7, 0.5);
+  padding-left: 16px;
+  margin: 16px 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-style: italic;
+}
+
+/* Horizontal rules */
+.step-description hr {
+  border: none;
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
+  margin: 24px 0;
+}
+
+/* Tables */
+.step-description table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+.step-description th,
+.step-description td {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: left;
+}
+
+.step-description th {
+  background: rgba(255, 255, 255, 0.1);
+  font-weight: 700;
+  color: white;
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -167,6 +385,14 @@
   .step-title {
     font-size: 17px;
   }
+  
+  .step-actions-row {
+    flex-direction: column;
+  }
+  
+  .step-action-btn {
+    width: 100%;
+  }
 
   .step-description p,
   .step-description ul,
@@ -174,3 +400,4 @@
     font-size: 15px;
   }
 }
+

@@ -24,6 +24,22 @@ Características de tus respuestas:
 - Usa terminología aeronáutica estándar (ICAO/EASA/FAA)
 - Responde en español de forma profesional
 
+**IMPORTANTE - Especificación de Herramientas:**
+Cuando proporciones instrucciones de mantenimiento, inspección o reparación, SIEMPRE debes:
+1. **Listar las herramientas necesarias** al inicio de tus instrucciones
+2. **Especificar el equipo requerido** (herramientas manuales, equipos de medición, EPIs, etc.)
+3. **Indicar herramientas especiales** si se requieren (calibradas, específicas del fabricante, etc.)
+4. **Mencionar equipos de seguridad** obligatorios para la tarea
+
+Formato recomendado para tus respuestas:
+🔧 **Herramientas y Equipo Necesario:**
+- [Lista las herramientas específicas]
+- [Incluye equipos de medición si aplica]
+- [Menciona EPIs/equipos de seguridad]
+
+📝 **Procedimiento:**
+- [Pasos detallados]
+
 Recuerda: La seguridad es lo primero. Siempre que sea necesario, recuerda al operario seguir los procedimientos oficiales y las normativas de seguridad aplicables."""
 
 class GeminiService:
@@ -65,9 +81,22 @@ class GeminiService:
                 system_prompt += f"Paso {step['step_number']}: {step['title']}\n"
                 if step.get('description'):
                     system_prompt += f"Descripción: {step['description']}\n"
-                system_prompt += "\nTu objetivo es ayudar al operario a completar ESTE PASO ESPECÍFICO. "
-                system_prompt += "Enfócate en responder preguntas relacionadas con este paso. "
-                system_prompt += "Cuando el operario confirme que ha completado el paso, recuérdale que debe marcar el paso como completado usando el botón correspondiente."
+                system_prompt += "\n**IMPORTANTE - FORMATO DE RESPUESTA:**\n"
+                system_prompt += "Tu objetivo es ayudar al operario a completar ESTE PASO ESPECÍFICO.\n"
+                system_prompt += "Cuando proporciones instrucciones o procedimientos, sé MUY ESPECÍFICO:\n\n"
+                system_prompt += "✓ Menciona ubicaciones EXACTAS (panel, lado izquierdo/derecho, altura)\n"
+                system_prompt += "✓ Especifica herramientas CONCRETAS (llaves de 10mm, torquímetro 0-50 Nm, etc.)\n"
+                system_prompt += "✓ Numera cada actividad claramente (1. 2. 3.)\n"
+                system_prompt += "✓ Detalla QUÉ hacer, DÓNDE hacerlo, CON QUÉ herramienta, y CÓMO verificar\n\n"
+                system_prompt += "Ejemplo de formato:\n"
+                system_prompt += "**Herramientas necesarias:**\n"
+                system_prompt += "- Llave dinamométrica (0-50 Nm)\n"
+                system_prompt += "- Destornillador Phillips #2\n\n"
+                system_prompt += "**Procedimiento:**\n"
+                system_prompt += "1. Localizar el panel de acceso inferior derecho (a 1.5m del suelo)\n"
+                system_prompt += "2. Retirar los 4 tornillos Phillips usando destornillador #2\n"
+                system_prompt += "3. Verificar que los tornillos estén en buen estado antes de guardar\n\n"
+                system_prompt += "Cuando el operario confirme que ha completado el paso, recuérdale marcar el paso como completado."
         
         messages = [SystemMessage(content=system_prompt)]
         
@@ -126,18 +155,26 @@ class GeminiService:
             context_info = f"\nModelo de avión: {chat_context.get('airplane_model', 'No especificado')}\n"
             context_info += f"Sistema/Componente: {chat_context.get('component_type', 'No especificado')}\n"
         
-        # Structured prompt for annotations - SIMPLIFIED for JSON mode
-        prompt = f"""Analiza esta imagen de un motor de avión y responde a: {message}
-{context_info}
-Identifica 5-6 componentes principales del motor.
+        # Structured prompt for annotations - DYNAMIC based on user question
+        prompt = f"""Eres un asistente experto en mantenimiento aeronáutico analizando una imagen.
 
-REGLAS para círculos:
-- Radius: 8-13% del ancho (círculos moderados que rodean bien)
-- NO superposición: círculos separados
-- Coordenadas x,y: centro exacto del componente (0-100%)
-- Nombres: terminología técnica en español
+PREGUNTA DEL USUARIO: {message}
+{context_info}{context}
 
-Componentes típicos: Carenado del Núcleo, Carenado del Ventilador, Ventilador (Fan), Compresor Alta Presión, Cámara de Combustión, Tobera de Escape."""
+INSTRUCCIONES - Analiza la pregunta y responde según el tipo:
+1. Verificación ("¿está bien?", "¿es correcto?", "¿va bien?"): Inspecciona buscando problemas, tornillos flojos, fugas, daños. Marca problemas encontrados.
+2. Ubicación ("¿dónde está?", "ubica", "localiza"): Encuentra y marca el componente/tornillo/pieza específica que menciona.
+3. Identificación ("¿qué es?", "identifica"): Identifica componentes principales visibles (máximo 5-6 más relevantes).
+4. Inspección/procedimiento: Proporciona pasos específicos y marca puntos clave.
+
+REGLAS para anotaciones (círculos):
+- Radius: 8-13% del ancho de la imagen
+- NO superposición entre círculos
+- Coordenadas x,y: centro exacto del elemento (0-100%)
+- Text: nombre corto y técnico en español
+- IMPORTANTE: Solo marca elementos RELEVANTES a la pregunta del usuario
+
+Responde directamente y útilmente a lo que el usuario preguntó."""
 
         try:
             # Use JSON schema mode for consistent output
