@@ -62,3 +62,17 @@ export const deleteHistory = async (historyId) => {
         throw new Error(error.detail || 'Failed to delete history');
     }
 };
+
+export const exportHistoryPDF = async (historyId) => {
+    const response = await authenticatedFetch(getApiUrl(`/histories/${historyId}/pdf`), {
+        method: 'GET',
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Failed to export PDF');
+    }
+
+    return await response.blob();
+};
+

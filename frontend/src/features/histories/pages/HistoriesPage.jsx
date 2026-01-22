@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getHistories, deleteHistory } from '../services/historiesService';
+import { getHistories, deleteHistory, exportHistoryPDF } from '../services/historiesService';
 import { isAuthenticated } from '../../auth/services/authService';
 import { getCurrentUser } from '../../profile/services/userService';
 import CloudsBackground from '../../shared/components/CloudsBackground';
@@ -54,6 +54,32 @@ function HistoriesPage() {
       }
     } catch (err) {
       setError('Error al eliminar el histórico');
+    }
+  };
+
+  const handleExportPDF = async (historyId, title) => {
+    try {
+      const blob = await exportHistoryPDF(historyId);
+      
+      // Create download URL
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      
+      // Create safe filename
+      const safeTitle = title.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 50);
+      a.download = `informe_${safeTitle}_${historyId}.pdf`;
+      
+      // Trigger download
+      document.body.appendChild(a);
+      a.click();
+      
+      // Cleanup
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      setError('Error al exportar PDF');
+      console.error('Error exporting PDF:', err);
     }
   };
 
@@ -172,6 +198,14 @@ function HistoriesPage() {
           <div className="history-modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" onClick={closeFullScreen}>
               ✕
+            </button>
+            
+            <button 
+              className="modal-export-btn" 
+              onClick={() => handleExportPDF(selectedHistory.id, selectedHistory.title)}
+              title="Exportar a PDF"
+            >
+              📄
             </button>
             
             <div className="modal-header">

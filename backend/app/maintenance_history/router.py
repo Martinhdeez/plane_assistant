@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from typing import List
@@ -13,6 +14,7 @@ from app.maintenance_history.schemas import (
     GenerateHistoryResponse
 )
 from app.maintenance_history.models import MaintenanceHistory
+from app.maintenance_history import pdf_generator
 
 router = APIRouter(prefix="/api", tags=["maintenance_histories"])
 
@@ -179,4 +181,63 @@ async def delete_maintenance_history(
             detail="Histórico no encontrado"
         )
     return None
+
+
+@router.get(
+    "/histories/{history_id}/pdf",
+    response_class=StreamingResponse
+)
+async def export_history_pdf(
+    history_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Export maintenance history as PDF
+    All authenticated users can export histories they have access to
+    """
+    # Get the history
+    history = await service.get_history_by_id(
+        db=db,
+        history_id=history_id,
+        user_id=current_user.id
+    )
+    
+    if not history:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Histórico no encontrado"
+        )
+    
+    try:
+        # Generate PDF
+        pdf_buffer = pdf_generator.generate_maintenance_history_pdf(
+            title=history.title,
+            summary=history.summary,
+            created_at=history.created_at,
+            aircraft_info=history.aircraft_info,
+            maintenance_actions=history.maintenance_actions,
+            parts_used=history.parts_used
+        )
+        
+        # Create safe filename
+        safe_title = "".join(c for c in history.title if c.isalnum() or c in (' ', '-', '_')).rstrip()
+        safe_title = safe_title.replace(' ', '_')[:50]  # Limit length
+        filename = f"informe_{safe_title}_{history_id}.pdf"
+        
+        # Return PDF as streaming response
+        return StreamingResponse(
+            pdf_buffer,
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f"attachment; filename={filename}"
+            }
+        )
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al generar PDF: {str(e)}"
+        )
+
 
