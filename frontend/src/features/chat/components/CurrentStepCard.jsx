@@ -37,29 +37,31 @@ function CurrentStepCard({ step, onComplete, onPrevious, hasPreviousStep, isComp
         </div>
       )}
       
-      <div className="step-actions-row">
-        <button 
-          className="step-action-btn previous-btn"
-          onClick={onPrevious}
-          disabled={!hasPreviousStep || isGoingBack || isCompleting}
-          title={hasPreviousStep ? "Volver al paso anterior" : "No hay paso anterior"}
-        >
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        
-        <button 
-          className="step-action-btn complete-btn"
-          onClick={onComplete}
-          disabled={isCompleting || isGoingBack}
-          title={isCompleting ? "Completando..." : "Avanzar al siguiente paso"}
-        >
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-      </div>
+      {isExpanded && (
+        <div className="step-actions-row">
+          <button 
+            className="step-action-btn previous-btn"
+            onClick={onPrevious}
+            disabled={!hasPreviousStep || isGoingBack || isCompleting}
+            title={hasPreviousStep ? "Volver al paso anterior" : "No hay paso anterior"}
+          >
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          
+          <button 
+            className="step-action-btn complete-btn"
+            onClick={onComplete}
+            disabled={isCompleting || isGoingBack}
+            title={isCompleting ? "Completando..." : "Avanzar al siguiente paso"}
+          >
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -895,16 +895,37 @@
 
   .chat-info h1 {
     font-size: 1rem;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-
+  
+  /* Compact header on mobile */
   .chat-header-actions {
     gap: var(--spacing-xs);
   }
 
   .generate-history-button,
   .back-button {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  /* Hide text on very small screens */
+  @media (max-width: 480px) {
+    .button-text {
+      display: none;
+    }
+    
+    .chat-info h1 {
+      max-width: 140px;
+    }
+    
+    .chat-logo {
+      width: 1.8rem;
+      height: 1.8rem;
+    }
   }
 
   .settings-button {

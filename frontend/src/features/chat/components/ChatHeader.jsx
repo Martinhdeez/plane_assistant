@@ -14,7 +14,8 @@ function ChatHeader({
   setShowSettingsMenu,
   onDeleteChat,
   onGenerateHistory,
-  generatingHistory
+  generatingHistory,
+  headerRef
 }) {
   const titleInputRef = useRef(null);
   const settingsMenuRef = useRef(null);
@@ -49,7 +50,7 @@ function ChatHeader({
   };
 
   return (
-    <header className="chat-header">
+    <header className="chat-header" ref={headerRef}>
       <div className="container">
         <div className="chat-info">
           <img src="/custom_logo.jpg" alt="Logo" className="chat-logo" />
@@ -92,7 +93,7 @@ function ChatHeader({
             aria-label="Generar Histórico"
             title="Generar histórico de mantenimiento"
           >
-            📋 {generatingHistory ? 'Generando...' : 'Histórico'}
+            📋 <span className="button-text">{generatingHistory ? 'Generando...' : 'Histórico'}</span>
           </button>
           <div className="settings-menu-container" ref={settingsMenuRef}>
             <button 
@@ -114,7 +115,7 @@ function ChatHeader({
             )}
           </div>
           <Link to="/dashboard" className="back-button">
-            ← Volver
+            ← <span className="button-text">Volver</span>
           </Link>
         </div>
       </div>

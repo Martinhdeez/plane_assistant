@@ -98,10 +98,24 @@ class StorageService:
         """
         Convert file path to servable URL
         Args:
-            image_path: Relative path to image (e.g., "uploads/users/user_1/chat_1/image.jpg")
+            image_path: Relative or absolute path to image
         Returns:
             URL path for serving the image (e.g., "/api/images/uploads/users/user_1/chat_1/image.jpg")
         """
+        try:
+            path_obj = Path(image_path)
+            if path_obj.is_absolute():
+                # Make relative to current working directory (project root)
+                relative_path = path_obj.relative_to(Path.cwd())
+                return f"/api/images/{relative_path}"
+        except ValueError:
+            # If path cannot be made relative (e.g. different drive), use suffix as fallback
+            # assuming standard structure uploads/...
+            if "uploads" in image_path:
+                parts = image_path.split("uploads")
+                return f"/api/images/uploads{parts[-1]}"
+            pass
+            
         # Ensure path doesn't start with /
         clean_path = image_path.lstrip('/')
         return f"/api/images/{clean_path}"

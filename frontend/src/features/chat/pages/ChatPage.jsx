@@ -33,6 +33,8 @@ function ChatPage() {
   const [steps, setSteps] = useState([]);
   const [isGoingBack, setIsGoingBack] = useState(false);
   const [isStepExpanded, setIsStepExpanded] = useState(true);
+  const [headerHeight, setHeaderHeight] = useState(60);
+  const headerRef = useRef(null);
   const [topPadding, setTopPadding] = useState(100);
 
   const messagesEndRef = useRef(null);
@@ -51,23 +53,39 @@ function ChatPage() {
     scrollToBottom();
   }, [messages]);
 
-  // Adjust top padding based on step card height
+  // Monitor header height
+  useLayoutEffect(() => {
+    if (headerRef.current) {
+      const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+           setHeaderHeight(entry.contentRect.height);
+        }
+      });
+      
+      resizeObserver.observe(headerRef.current);
+      return () => resizeObserver.disconnect();
+    }
+  }, []);
+
+  // Adjust top padding based on step card height & header height
   useLayoutEffect(() => {
     if (currentStep && stepCardWrapperRef.current) {
       const resizeObserver = new ResizeObserver(entries => {
         for (let entry of entries) {
-           // Base top position (60px) + height + extra spacing
-           const newHeight = entry.contentRect.height + 80;
-           setTopPadding(newHeight);
+           // Header height + spacing (20px) + Card height + extra spacing (20px)
+           const cardTop = headerHeight + 20;
+           const newPadding = cardTop + entry.contentRect.height + 20;
+           setTopPadding(newPadding);
         }
       });
       
       resizeObserver.observe(stepCardWrapperRef.current);
       return () => resizeObserver.disconnect();
     } else {
-      setTopPadding(100);
+      // If no step card, padding is header height + spacing
+      setTopPadding(headerHeight + 40);
     }
-  }, [currentStep, isStepExpanded]);
+  }, [currentStep, isStepExpanded, headerHeight]);
 
   // Load authenticated images
   useEffect(() => {
@@ -398,10 +416,15 @@ function ChatPage() {
         onDeleteChat={handleDeleteChat}
         onGenerateHistory={handleGenerateHistory}
         generatingHistory={generatingHistory}
+        headerRef={headerRef}
       />
 
       {currentStep && (
-        <div className="step-card-fixed-wrapper" ref={stepCardWrapperRef}>
+        <div 
+          className="step-card-fixed-wrapper" 
+          ref={stepCardWrapperRef}
+          style={{ top: `${headerHeight + 20}px` }}
+        >
           <CurrentStepCard 
             step={currentStep} 
             onComplete={handleCompleteStep}

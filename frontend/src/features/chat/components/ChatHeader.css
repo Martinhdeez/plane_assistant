@@ -28,3 +28,16 @@
   color: #c4b5fd;
   border: 1px solid rgba(118, 75, 162, 0.4);
 }
+
+@media (max-width: 768px) {
+  .chat-context-header {
+    gap: 6px;
+    margin-top: 4px;
+  }
+  
+  .context-badge-header {
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 6px;
+  }
+}

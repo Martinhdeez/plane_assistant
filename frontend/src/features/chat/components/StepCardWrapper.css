@@ -1,7 +1,7 @@
 /* Step card wrapper - fixed position like header */
 .step-card-wrapper {
   position: fixed;
-  top: 60px; /* Below header */
+  top: 80px; /* Below header with more spacing */
   left: 0;
   right: 0;
   z-index: 150;
