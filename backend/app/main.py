@@ -46,11 +46,12 @@ async def serve_image(
     current_user: Annotated[User, Depends(get_current_user)]
 ):
     """Serve images with authentication"""
-    file_path = Path(path)
+    new_path = path.replace("uploads/users", settings.UPLOAD_PATH)
+    file_path = Path(new_path)
     
-    # Security: ensure path is within uploads directory
-    if not str(file_path).startswith("uploads/users/"):
-        raise HTTPException(status_code=403, detail="Access denied")
+    # # Security: ensure path is within uploads directory
+    # if not str(file_path).startswith("uploads/users/"):
+    #     raise HTTPException(status_code=403, detail="Access denied")
     
     # Verify file exists
     if not file_path.exists() or not file_path.is_file():
