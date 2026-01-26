@@ -123,6 +123,14 @@ class ImageProcessor:
                 )
                 current_y += line_spacing  # Use consistent line spacing
         
+        # Convert to RGB before saving (JPEG doesn't support alpha)
+        if img.mode == 'RGBA':
+            background = Image.new('RGB', img.size, (255, 255, 255))
+            background.paste(img, mask=img.split()[3]) # Use alpha channel as mask
+            img = background
+        elif img.mode != 'RGB':
+            img = img.convert('RGB')
+            
         # Convert to bytes
         img_byte_arr = io.BytesIO()
         img.save(img_byte_arr, format='JPEG', quality=95)

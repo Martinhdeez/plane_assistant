@@ -46,6 +46,19 @@ function MessageBubble({ message, formatTime, onImageClick }) {
                     {children}
                   </a>
                 );
+              },
+              img({node, ...props}) {
+                return (
+                  <div className="message-image-container">
+                    <img 
+                      {...props} 
+                      className="message-image"
+                      onClick={() => onImageClick(props.src)}
+                      title="Click para ampliar"
+                      alt={props.alt || "Imagen generada"}
+                    />
+                  </div>
+                );
               }
             }}
           >
