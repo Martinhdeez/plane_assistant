@@ -331,14 +331,14 @@
 
 .message-role {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1rem; /* Increased from 0.9rem */
   color: rgba(255, 255, 255, 0.95);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .message-time {
-  font-size: 0.8rem;
+  font-size: 0.9rem; /* Increased from 0.8rem */
   color: rgba(255, 255, 255, 0.5);
   margin-left: auto;
 }
@@ -355,7 +355,7 @@
 .message-content {
   color: #ececec;
   line-height: 1.7;
-  font-size: 1rem;
+  font-size: 1.1rem; /* Increased from 1rem for better readability */
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
@@ -374,10 +374,10 @@
   line-height: 1.3;
 }
 
-.message-content h1 { font-size: 1.8rem; }
-.message-content h2 { font-size: 1.5rem; }
-.message-content h3 { font-size: 1.3rem; }
-.message-content h4 { font-size: 1.1rem; }
+.message-content h1 { font-size: 2rem; } /* Increased from 1.8rem */
+.message-content h2 { font-size: 1.7rem; } /* Increased from 1.5rem */
+.message-content h3 { font-size: 1.5rem; } /* Increased from 1.3rem */
+.message-content h4 { font-size: 1.3rem; } /* Increased from 1.1rem */
 
 .message-content p {
   margin: var(--spacing-md) 0;
@@ -631,7 +631,7 @@
   margin: var(--spacing-md) 0;
   border-radius: 8px;
   overflow: hidden;
-  max-width: 400px;
+  max-width: 700px; /* Increased from 400px for better readability of technical images */
 }
 
 .message-image {
