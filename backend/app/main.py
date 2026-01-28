@@ -41,23 +41,17 @@ async def root():
     return {"message": "Welcome to Plane Assistant API"}
 
 @app.get("/api/images/{path:path}")
-async def serve_image(
-    path: str,
-    current_user: Annotated[User, Depends(get_current_user)]
-):
-    """Serve images with authentication"""
+async def serve_image(path: str):
+    """Serve images publicly (no authentication required for chat images)"""
     new_path = path.replace("uploads/users", settings.UPLOAD_PATH)
     file_path = Path(new_path)
     
-    # # Security: ensure path is within uploads directory
-    # if not str(file_path).startswith("uploads/users/"):
-    #     raise HTTPException(status_code=403, detail="Access denied")
+    # Security: ensure path is within uploads directory
+    if not str(file_path).startswith("uploads/"):
+        raise HTTPException(status_code=403, detail="Access denied")
     
     # Verify file exists
     if not file_path.exists() or not file_path.is_file():
         raise HTTPException(status_code=404, detail="Image not found")
-    
-    # TODO: Add user ownership verification
-    # Extract user_id from path and verify it matches current_user.id
     
     return FileResponse(file_path)
