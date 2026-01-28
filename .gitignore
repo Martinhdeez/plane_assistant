@@ -57,3 +57,6 @@ logs/
 # Docker
 docker/config
 docker/uploads
+
+# Uploads
+backend/uploads
