@@ -631,7 +631,7 @@
   margin: var(--spacing-md) 0;
   border-radius: 8px;
   overflow: hidden;
-  max-width: 700px;
+  max-width: 500px; /* Smaller size, users can click to zoom */
 }
 
 .message-image {

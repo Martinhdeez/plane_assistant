@@ -27,7 +27,8 @@ class ImageProcessor:
         
         # Calculate sizes based on image dimensions for better scaling
         # Cap base_size to avoid tiny annotations on very large images
-        base_size = min(min(img.width, img.height), 1200)  # Max 1200px for calculations
+        # Using smaller base_size makes annotations proportionally larger
+        base_size = min(min(img.width, img.height), 800)  # Max 800px for larger annotations
         circle_radius = int(base_size * 0.04)  # 4% of smallest dimension
         font_size_label = int(base_size * 0.05)  # 5% for numbers
         font_size_text = int(base_size * 0.025)  # 2.5% for text
@@ -92,7 +93,7 @@ class ImageProcessor:
         # Draw legend at bottom of image with larger, more readable text
         try:
             legend_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 
-                                            int(base_size * 0.055))  # Larger font for better readability
+                                            int(base_size * 0.07))  # Larger font for better readability
         except:
             legend_font = font_text
         
