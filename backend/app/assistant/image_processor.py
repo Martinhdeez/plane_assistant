@@ -88,16 +88,15 @@ class ImageProcessor:
             # White number on top
             draw.text((number_x, number_y), number_text, font=number_font, fill='#FFFFFF')
         
-        # Draw legend at bottom of image
-        # Calculate proper spacing based on font size
+        # Calculate legend dimensions
         try:
             legend_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 
-                                            int(base_size * 0.03))  # Larger for readability
+                                            int(base_size * 0.045))  # Increased from 0.03 for better readability
         except:
             legend_font = font_text
         
         # Calculate legend dimensions
-        line_spacing = int(base_size * 0.05)  # 5% of image for each line - plenty of space
+        line_spacing = int(base_size * 0.065)  # Increased from 0.05 for better spacing
         legend_padding = 30
         legend_height = legend_padding * 2 + len(annotations) * line_spacing
         legend_y_start = max(20, img.height - legend_height - 20)  # Ensure it fits

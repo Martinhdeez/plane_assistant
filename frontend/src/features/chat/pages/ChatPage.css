@@ -631,7 +631,7 @@
   margin: var(--spacing-md) 0;
   border-radius: 8px;
   overflow: hidden;
-  max-width: 700px; /* Increased from 400px for better readability of technical images */
+  max-width: 700px;
 }
 
 .message-image {
