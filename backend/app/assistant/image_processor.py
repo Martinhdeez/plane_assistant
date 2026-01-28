@@ -26,7 +26,8 @@ class ImageProcessor:
         draw = ImageDraw.Draw(img)
         
         # Calculate sizes based on image dimensions for better scaling
-        base_size = min(img.width, img.height)
+        # Cap base_size to avoid tiny annotations on very large images
+        base_size = min(min(img.width, img.height), 1200)  # Max 1200px for calculations
         circle_radius = int(base_size * 0.04)  # 4% of smallest dimension
         font_size_label = int(base_size * 0.05)  # 5% for numbers
         font_size_text = int(base_size * 0.025)  # 2.5% for text
@@ -88,15 +89,15 @@ class ImageProcessor:
             # White number on top
             draw.text((number_x, number_y), number_text, font=number_font, fill='#FFFFFF')
         
-        # Calculate legend dimensions
+        # Draw legend at bottom of image with larger, more readable text
         try:
             legend_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 
-                                            int(base_size * 0.045))  # Increased from 0.03 for better readability
+                                            int(base_size * 0.055))  # Larger font for better readability
         except:
             legend_font = font_text
         
-        # Calculate legend dimensions
-        line_spacing = int(base_size * 0.065)  # Increased from 0.05 for better spacing
+        # Calculate legend dimensions with tighter spacing
+        line_spacing = int(base_size * 0.04)  # Tighter spacing to save space
         legend_padding = 30
         legend_height = legend_padding * 2 + len(annotations) * line_spacing
         legend_y_start = max(20, img.height - legend_height - 20)  # Ensure it fits
