@@ -29,6 +29,13 @@ class ImageProcessor:
         # Cap base_size to avoid tiny annotations on very large images
         # Using smaller base_size makes annotations proportionally larger
         base_size = min(min(img.width, img.height), 800)  # Max 800px for larger annotations
+        
+        # Use absolute minimum font sizes to ensure readability
+        # Calculate percentage-based size but enforce minimums
+        legend_font_size = max(32, int(base_size * 0.07))  # Min 32px for legend text
+        number_font_size = max(48, int(base_size * 0.08))  # Min 48px for numbers
+        line_spacing_size = max(28, int(base_size * 0.04))  # Min 28px spacing
+        
         circle_radius = int(base_size * 0.04)  # 4% of smallest dimension
         font_size_label = int(base_size * 0.05)  # 5% for numbers
         font_size_text = int(base_size * 0.025)  # 2.5% for text
@@ -64,10 +71,10 @@ class ImageProcessor:
             
             # Draw number inside circle (white text with black outline for visibility)
             number_text = str(idx)
-            # Use larger font for number
+            # Use larger font for number with absolute minimum
             try:
                 number_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 
-                                                 int(base_size * 0.08))  # Large number
+                                                 number_font_size)
             except:
                 number_font = ImageFont.load_default()
             
@@ -90,15 +97,17 @@ class ImageProcessor:
             # White number on top
             draw.text((number_x, number_y), number_text, font=number_font, fill='#FFFFFF')
         
-        # Draw legend at bottom of image with larger, more readable text
+        # Draw legend at bottom of image with large, readable text
         try:
             legend_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 
-                                            int(base_size * 0.07))  # Larger font for better readability
-        except:
+                                            legend_font_size)
+        except Exception as e:
+            # Fallback to a reasonable default size if font loading fails
+            print(f"Warning: Could not load font, using default. Error: {e}")
             legend_font = font_text
         
-        # Calculate legend dimensions with tighter spacing
-        line_spacing = int(base_size * 0.04)  # Tighter spacing to save space
+        # Calculate legend dimensions with guaranteed minimum spacing
+        line_spacing = line_spacing_size
         legend_padding = 30
         legend_height = legend_padding * 2 + len(annotations) * line_spacing
         legend_y_start = max(20, img.height - legend_height - 20)  # Ensure it fits
