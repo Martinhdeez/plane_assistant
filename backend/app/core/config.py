@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     
     # Gemini AI Configuration
     GOOGLE_API_KEY: str = "xxx"
-    GEMINI_MODEL: str = "gemini-2.0-flash-exp"
+    GEMINI_MODEL: str = "gemini-3-flash-preview"
     
     # Photo uploads
     UPLOAD_PATH: str = "uploads/users"

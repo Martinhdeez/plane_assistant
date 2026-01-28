@@ -86,7 +86,7 @@ REGLAS IMPORTANTES:
 6. Responde SOLO con el JSON, sin texto adicional"""
 
     # Call Gemini AI
-    model = genai.GenerativeModel("gemini-2.0-flash-exp")
+    model = genai.GenerativeModel(settings.GEMINI_MODEL)
     response = model.generate_content(prompt)
     
     # Parse JSON response
