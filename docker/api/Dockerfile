@@ -20,7 +20,7 @@ COPY ./backend/.env_example .
 WORKDIR /app
 
 RUN apt update &&\
-    apt install curl jq -y &&\
+    apt install curl jq fonts-dejavu-core -y &&\
     rm -rf /var/lib/apt/lists/*
 
 COPY ./backend/alembic /app/alembic
