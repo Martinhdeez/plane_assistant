@@ -30,11 +30,10 @@ class ImageProcessor:
         # Using smaller base_size makes annotations proportionally larger
         base_size = min(min(img.width, img.height), 800)  # Max 800px for larger annotations
         
-        # Use absolute minimum font sizes to ensure readability
-        # Calculate percentage-based size but enforce minimums
-        legend_font_size = max(14, int(base_size * 0.07))  # Min 14px for compact legend text
-        number_font_size = max(48, int(base_size * 0.08))  # Min 48px for numbers
-        line_spacing_size = max(16, int(base_size * 0.04))  # Min 16px spacing
+        # Use fixed font sizes for precise control (not percentage-based)
+        legend_font_size = 18  # Fixed 18px for readable legend
+        number_font_size = 36  # Fixed 36px for numbers
+        line_spacing_size = 20  # Fixed 20px spacing
         
         circle_radius = int(base_size * 0.04)  # 4% of smallest dimension
         font_size_label = int(base_size * 0.05)  # 5% for numbers
