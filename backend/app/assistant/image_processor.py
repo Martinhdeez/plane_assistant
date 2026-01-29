@@ -32,9 +32,9 @@ class ImageProcessor:
         
         # Use absolute minimum font sizes to ensure readability
         # Calculate percentage-based size but enforce minimums
-        legend_font_size = max(32, int(base_size * 0.07))  # Min 32px for legend text
+        legend_font_size = max(20, int(base_size * 0.07))  # Min 20px for legend text
         number_font_size = max(48, int(base_size * 0.08))  # Min 48px for numbers
-        line_spacing_size = max(28, int(base_size * 0.04))  # Min 28px spacing
+        line_spacing_size = max(22, int(base_size * 0.04))  # Min 22px spacing
         
         circle_radius = int(base_size * 0.04)  # 4% of smallest dimension
         font_size_label = int(base_size * 0.05)  # 5% for numbers
